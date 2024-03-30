@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tracker</title>
+</head>
+<body>
+<form method="post" th:action="@{/sign-in}">
+    <div>
+        <label for="username">Никнейм</label>
+        <input id="username" type="text" name="username"/>
+    </div>
+
+    <div>
+        <label for="password">Пароль</label>
+        <input id="password" type="password" name="password"/>
+    </div>
+
+    <div>
+        <input id="csrfToken" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+        <button type="submit">Войти</button>
+    </div>
+</form>
+<div>
+    <p>У вас нет аккаута? Тогда <a href="/sign-in">Зарегистрируйтесь</a></p>
+</div>
+</body>
+</html>
