@@ -18,7 +18,7 @@
 
 <div sec:authorize="isAuthenticated()">
     <h2>Ваш профиль</h2>
-    <a href="/profile">Профиль</a>
+    <a th:href="@{/profile/{username}(username=${authenticationUser.getUsername()})}" th:if="${authenticationUser != null}">Профиль</a>
 </div>
 </body>
 </html>

@@ -5,8 +5,10 @@ import com.tracker.tracker.entity.role.Role;
 import com.tracker.tracker.service.customer.CustomerService;
 import com.tracker.tracker.service.principal.PrincipalServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -52,5 +54,11 @@ public class AuthenticationServiceImpl implements AuthenticationService, UserDet
         List<GrantedAuthority> role = new ArrayList<>();
         role.add(new SimpleGrantedAuthority(customer.isActive() ? customer.getRole() : Role.BANNED.getAuthority()));
         return role;
+    }
+
+    @Override
+    public Customer getAuthentication() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return customerService.findByUsername(authentication.getName());
     }
 }
