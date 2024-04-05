@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>Tracker</title>
+</head>
+<body>
+<div sec:authorize="!isAuthenticated()">
+    <h2>To get started, register</h2>
+    <div>
+        <a href="/sign-up">sign-up</a>
+    </div>
+    <div>
+        <a href="/sign-in">sign-in</a>
+    </div>
+</div>
+
+<div sec:authorize="isAuthenticated()">
+    <a th:href="@{/profile/{username}(username=${authenticationCustomer.getUsername()})}" th:if="${authenticationCustomer != null}">My Profile</a>
+</div>
+</body>
+</html>
