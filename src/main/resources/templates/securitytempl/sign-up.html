@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tracker</title>
+</head>
+<body>
+<form method="post" th:action="@{/sign-up}" th:object="${signUpForm}">
+    <div>
+        <label for="username">Username</label>
+        <input id="username" type="text" th:field="*{username}"/>
+    </div>
+
+    <div>
+        <label for="email">Email</label>
+        <input id="email" type="email" th:field="*{email}"/>
+    </div>
+
+    <div>
+        <label for="password">Password</label>
+        <input id="password" type="password" th:field="*{password}"/>
+    </div>
+
+    <div>
+        <input id="csrfToken" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+        <button type="submit">sign-up</button>
+    </div>
+</form>
+<div>
+    <p>Already have an account? <a href="/sign-in">Sign in</a></p>
+</div>
+</body>
+</html>
