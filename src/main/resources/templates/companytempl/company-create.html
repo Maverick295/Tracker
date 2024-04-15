@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Company</title>
+</head>
+<body>
+<form method="post" action="/company/create" th:object="${companyCreateForm}">
+    <h1>Create Company</h1>
+    <div>
+        <label>CompanyName
+            <input type="text" th:field="*{companyName}" required>
+        </label>
+    </div>
+    <div>
+        <label>Legal Entity
+            <input type="text" th:field="*{legalEntity}" required>
+        </label>
+    </div>
+    <div>
+        <label>INN
+            <input type="text" th:field="*{inn}" required>
+        </label>
+    </div>
+    <div>
+        <label>BankAccount
+            <input type="text" th:field="*{bankAccount}" required>
+        </label>
+    </div>
+    <div>
+        <label>Bank Bik
+            <input type="text" th:field="*{bankBik}" required>
+        </label>
+    </div>
+    <div>
+        <label>Legal Address
+            <input type="text" th:field="*{legalAddress}">
+        </label>
+    </div>
+    <div>
+        <label>Actual Address
+            <input type="text" th:field="*{actualAddress}">
+        </label>
+    </div>
+    <div>
+        <label>Email
+            <input type="email" th:field="*{email}">
+        </label>
+    </div>
+    <div>
+        <label>Phone Number
+            <input type="tel" th:field="*{phoneNumber}">
+        </label>
+    </div>
+    <div>
+        <label>Director Full Name
+            <input type="text" th:field="*{directorFullName}">
+        </label>
+    </div>
+    <div>
+        <label>OGRN
+            <input type="text" th:field="*{ogrn}">
+        </label>
+    </div>
+    <div>
+        <label>OKPO
+            <input type="text" th:field="*{okpo}">
+        </label>
+    </div>
+    <div>
+        <input id="csrfToken" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+        <button type="submit">Создать</button>
+    </div>
+</form>
+</body>
+</html>
