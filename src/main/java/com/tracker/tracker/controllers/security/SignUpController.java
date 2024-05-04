@@ -37,21 +37,22 @@ public class SignUpController {
 
     @GetMapping
     public ModelAndView registrationGet() {
-        return new ModelAndView("securitytempl/sign-up")
+        return new ModelAndView("security/sign-up")
                 .addObject("signUpForm", new SignUpForm());
     }
 
     @PostMapping
-    public ModelAndView registrationPost(@ModelAttribute @Valid SignUpForm form, BindingResult result) {
+    public ModelAndView registrationPost(
+            @ModelAttribute @Valid SignUpForm form,
+            BindingResult result
+    ) {
         if (result.hasErrors()) {
-            log.info("Возникли ошибки при отправке формы регистрации");
-            return new ModelAndView("securitytempl/sign-up")
+            return new ModelAndView("security/sign-up")
                     .addObject("signUpForm", new SignUpForm());
         }
 
         Customer customer = customerService.createCustomer(form);
         customerService.save(customer);
-        log.info("Пользователь с ником " + customer.getUsername() + "успешно создан!");
 
         return RedirectUtil.redirect("/sign-in");
     }

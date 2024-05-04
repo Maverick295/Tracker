@@ -24,6 +24,7 @@ public class ModelServiceImpl implements ModelService {
             return new MainPageModel()
                     .setUsername(customer.getUsername());
         }
+
         return new MainPageModel();
     }
 }

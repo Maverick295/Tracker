@@ -8,6 +8,7 @@ public class RedirectUtil {
         RedirectView view = new RedirectView();
         view.setUrl(path);
         view.setExposeModelAttributes(false);
+
         return new ModelAndView(view);
     }
 }

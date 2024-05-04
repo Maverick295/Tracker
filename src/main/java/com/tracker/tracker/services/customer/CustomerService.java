@@ -8,4 +8,7 @@ public interface CustomerService {
     Customer findByUsername(String username);
     Customer findByEmail(String email);
     Customer createCustomer(SignUpForm form);
+    String generateUserUuid();
+    Customer getAuthenticatedCustomer();
+    void saveCustomerAndUpdateSession(Customer customer);
 }

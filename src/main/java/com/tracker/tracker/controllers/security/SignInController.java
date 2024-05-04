@@ -1,22 +1,34 @@
 package com.tracker.tracker.controllers.security;
 
+import com.tracker.tracker.services.authentication.AuthenticationService;
+import com.tracker.tracker.services.customer.CustomerService;
 import com.tracker.tracker.utils.RedirectUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("/sign-in")
 public class SignInController {
-    @GetMapping
-    public ModelAndView login() {
-        return new ModelAndView("securitytempl/sign-in");
+    private AuthenticationService authenticationService;
+    private CustomerService customerService;
+
+    @Autowired
+    public SignInController(AuthenticationService authenticationService, CustomerService customerService) {
+        this.authenticationService = authenticationService;
+        this.customerService = customerService;
     }
 
-    @PostMapping
-    public ModelAndView loginAction() {
+
+    @GetMapping("/sign-in")
+    public ModelAndView loginForm() {
+        return new ModelAndView("security/sign-in");
+    }
+
+    @PostMapping("/sign-in")
+    public ModelAndView login() {
+
         return RedirectUtil.redirect("/");
     }
 }

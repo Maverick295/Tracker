@@ -2,6 +2,7 @@ package com.tracker.tracker.validators.security;
 
 import com.tracker.tracker.forms.security.SignUpForm;
 import com.tracker.tracker.services.customer.CustomerService;
+import io.micrometer.common.lang.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -19,12 +20,12 @@ public class SignUpFormValidator implements Validator {
     }
 
     @Override
-    public boolean supports(Class<?> clazz) {
+    public boolean supports(@NonNull Class<?> clazz) {
         return SignUpForm.class.equals(clazz);
     }
 
     @Override
-    public void validate(Object target, Errors errors) {
+    public void validate(@NonNull Object target, @NonNull Errors errors) {
         SignUpForm form = (SignUpForm) target;
 
         if (Objects.nonNull(customerService.findByUsername(form.getUsername()))) {
