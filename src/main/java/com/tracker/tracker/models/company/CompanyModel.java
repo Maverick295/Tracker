@@ -13,7 +13,7 @@ public class CompanyModel {
     private String directorFullName; // ФИО директора компании
     private String ogrn; // ОГРН компании (если применимо)
     private String okpo; // ОКПО компании (если применимо)
-
+    private String Uuid;
     public String getCompanyName() {
         return companyName;
     }
@@ -119,6 +119,15 @@ public class CompanyModel {
 
     public CompanyModel setOkpo(String okpo) {
         this.okpo = okpo;
+        return this;
+    }
+
+    public String getUuid() {
+        return Uuid;
+    }
+
+    public CompanyModel setUuid(String uuid) {
+        Uuid = uuid;
         return this;
     }
 }

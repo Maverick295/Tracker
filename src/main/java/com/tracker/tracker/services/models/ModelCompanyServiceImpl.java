@@ -21,6 +21,7 @@ public class ModelCompanyServiceImpl implements ModelCompanyService{
                 .setInn(company.getInn())
                 .setBankAccount(company.getBankAccount())
                 .setPhoneNumber(company.getPhoneNumber())
-                .setLegalEntity(company.getLegalEntity());
+                .setLegalEntity(company.getLegalEntity())
+                .setUuid(company.getUuid());
     }
 }

@@ -7,6 +7,7 @@ import com.tracker.tracker.forms.company.CompanyCreateForm;
 import com.tracker.tracker.models.company.CompanyModel;
 import com.tracker.tracker.repositories.CompanyRepository;
 import com.tracker.tracker.services.authentication.AuthenticationService;
+import com.tracker.tracker.services.customer.CustomerService;
 import com.tracker.tracker.services.models.ModelCompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,24 +16,25 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
-    private final AuthenticationService authenticationService;
+    private final CustomerService customerService;
     private final ModelCompanyService modelCompanyService;
 
     @Autowired
-    public CompanyServiceImpl(CompanyRepository companyRepository, AuthenticationService authenticationService, ModelCompanyService modelCompanyService) {
+    public CompanyServiceImpl(CompanyRepository companyRepository,  CustomerService customerService, ModelCompanyService modelCompanyService) {
         this.companyRepository = companyRepository;
-        this.authenticationService = authenticationService;
+        this.customerService = customerService;
         this.modelCompanyService = modelCompanyService;
     }
 
     @Override
     public Company createCompany(CompanyCreateForm form) {
         LocalDateTime localDateTime = LocalDateTime.now();
-        Customer ownerCustomer = authenticationService.getAuthentication();
+        Customer ownerCustomer = customerService.getAuthenticatedCustomer();
         return new Company()
                 .setCompanyName(form.getCompanyName())
                 .setLegalEntity(form.getLegalEntity())
@@ -47,7 +49,8 @@ public class CompanyServiceImpl implements CompanyService {
                 .setOgrn(form.getOgrn())
                 .setOkpo(form.getOkpo())
                 .setDateOfCreate(localDateTime)
-                .setCustomer(ownerCustomer);
+                .setCustomer(ownerCustomer)
+                .setUuid(generateCompanyUuid());
     }
 
     @Override
@@ -87,8 +90,24 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Page<CompanyModel> getCompanies(Pageable pageable) {
-        Customer customer = authenticationService.getAuthentication();
+        Customer customer = customerService.getAuthenticatedCustomer();
         return companyRepository.findAllByCustomer(pageable, customer)
                 .map(company -> modelCompanyService.getCompanyModel(company));
+    }
+
+    @Override
+    public String generateCompanyUuid() {
+        return UUID.randomUUID().toString();
+    }
+
+    @Override
+    public Optional<Company> findByUuid(String uuid) {
+        Optional<Company> company = companyRepository.findCompanyByUuid(uuid);
+        return company;
+    }
+
+    @Override
+    public void deleteCompanyByUuid(String uuid) {
+        companyRepository.deleteByUuid(uuid);
     }
 }

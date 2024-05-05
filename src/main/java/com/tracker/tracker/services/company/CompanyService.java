@@ -15,4 +15,7 @@ public interface CompanyService {
     void deleteCompany(Long id);
     Optional<Company> findById(Long id);
     Page<CompanyModel> getCompanies(Pageable pageable);
+    String generateCompanyUuid();
+    Optional<Company> findByUuid(String uuid);
+    void deleteCompanyByUuid(String uuid);
 }

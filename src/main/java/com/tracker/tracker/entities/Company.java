@@ -29,6 +29,7 @@ public class Company {
     @Column(nullable = false)
     private String bankBik; // БИК банка, в котором открыт расчетный счет
 
+    private String Uuid;
     private String legalAddress; // Юридический адрес компании
     private String actualAddress; // Фактический адрес компании
     private String email; // Электронная почта компании
@@ -169,6 +170,15 @@ public class Company {
 
     public Company setDateOfCreate(LocalDateTime dateOfCreate) {
         this.dateOfCreate = dateOfCreate;
+        return this;
+    }
+
+    public String getUuid() {
+        return Uuid;
+    }
+
+    public Company setUuid(String Uuid) {
+        this.Uuid = Uuid;
         return this;
     }
 }
