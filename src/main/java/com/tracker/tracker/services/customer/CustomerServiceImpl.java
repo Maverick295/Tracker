@@ -5,10 +5,13 @@ import com.tracker.tracker.entities.role.Role;
 import com.tracker.tracker.forms.security.SignUpForm;
 import com.tracker.tracker.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -40,9 +43,16 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public String generateUserUuid() {
+        return UUID.randomUUID().toString();
+    }
+
+    @Override
     public Customer createCustomer(SignUpForm form) {
         LocalDateTime localDateTime = LocalDateTime.now();
+
         return new Customer()
+                .setUuid(generateUserUuid())
                 .setUsername(form.getUsername())
                 .setEmail(form.getEmail())
                 .setPassword(encoder.encode(form.getPassword()))
@@ -50,4 +60,26 @@ public class CustomerServiceImpl implements CustomerService {
                 .setActive(true)
                 .setRole(Role.USER.getAuthority());
     }
+
+    @Override
+    public Customer getAuthenticatedCustomer() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        return findByUsername(authentication.getName());
+    }
+
+    @Override
+    public void saveCustomerAndUpdateSession(Customer customer) {
+        if (customer == null) {
+            throw new IllegalArgumentException("'customer' == null");
+        }
+
+        try {
+            save(customer);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Ошибка во время обновления сессии: ", e);
+        }
+    }
 }
+
