@@ -4,9 +4,13 @@ import com.tracker.tracker.entities.Customer;
 import com.tracker.tracker.services.authentication.AuthenticationService;
 import com.tracker.tracker.services.customer.CustomerService;
 import com.tracker.tracker.services.models.ModelService;
+import com.tracker.tracker.utils.RedirectUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/")
+@Slf4j
 public class MainController {
     private final CustomerService customerService;
     private final ModelService modelService;
@@ -30,13 +35,21 @@ public class MainController {
     }
 
     @GetMapping
-    public ModelAndView mainPage(
-    ) {
-        Customer authenticationCustomer = customerService.getAuthenticatedCustomer();
+    public ModelAndView homePageBeforeLogin(Authentication authentication) {
+        if (authentication == null || authentication.isAuthenticated()) {
+            return RedirectUtil.redirect("/home");
+        }
 
-        authenticationService.setUserAuthentication(authenticationCustomer.getUsername());
+        return new ModelAndView("home/home-before");
+    }
 
-        return new ModelAndView("main/main-page")
-                .addObject("authenticationCustomer", modelService.getMainPageModel(authenticationCustomer));
+    @GetMapping("/home")
+    public ModelAndView homePageAfterLogin() {
+        Customer authenticatedCustomer = customerService.getAuthenticatedCustomer();
+
+        authenticationService.setUserAuthentication(authenticatedCustomer.getUsername());
+
+        return new ModelAndView("home/home-after")
+                .addObject("authenticatedCustomer", authenticatedCustomer);
     }
 }

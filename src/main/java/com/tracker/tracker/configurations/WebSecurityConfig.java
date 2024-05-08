@@ -23,12 +23,13 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityConfig(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((request) -> request
-                        .anyRequest().permitAll()
+                        .requestMatchers("/", "/profile/{username}").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
                         .loginPage("/sign-in")
                         .failureUrl("/sign-in")
-                        .defaultSuccessUrl("/")
+                        .defaultSuccessUrl("/home")
                         .permitAll()
                 )
                 .logout((logout) -> logout

@@ -19,6 +19,7 @@ import java.util.List;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
+
     private final CustomerService customerService;
 
     @Autowired
