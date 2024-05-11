@@ -1,5 +1,7 @@
 package com.tracker.tracker.services.authentication;
 
+import com.tracker.tracker.entities.Customer;
+import com.tracker.tracker.services.customer.CustomerService;
 import com.tracker.tracker.services.details.service.CustomUserDetailsService;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
@@ -16,14 +18,17 @@ import org.springframework.stereotype.Service;
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final CustomUserDetailsService customUserDetailsService;
     private final AuthenticationManager authenticationManager;
+    private final CustomerService customerService;
 
     @Autowired
     public AuthenticationServiceImpl(
             CustomUserDetailsService customUserDetailsService,
-            AuthenticationManager authenticationManager
+            AuthenticationManager authenticationManager,
+            CustomerService customerService
     ) {
         this.customUserDetailsService = customUserDetailsService;
         this.authenticationManager = authenticationManager;
+        this.customerService = customerService;
     }
 
     @Override
@@ -31,7 +36,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
 
         setAuthentication(
-                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities())
+                new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities())
         );
     }
 
@@ -43,5 +48,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public void setAuthenticate(@NotNull Authentication authentication) {
        setAuthentication(authenticationManager.authenticate(authentication));
+    }
+
+    @Override
+    public void updateSessionAfterChangeInfo(Customer customer) {
+        customerService.save(customer);
+        SecurityContextHolder.getContext().setAuthentication(null);
+        setUserAuthentication(customer.getUsername());
     }
 }

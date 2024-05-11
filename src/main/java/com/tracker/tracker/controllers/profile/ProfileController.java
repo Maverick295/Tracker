@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Optional;
+
 @Controller
 @RequestMapping("/profile")
 public class ProfileController {
@@ -32,16 +34,14 @@ public class ProfileController {
             @PathVariable String username
     ) {
         Customer authenticationCustomer = customerService.getAuthenticatedCustomer();
-        Customer otherCustomer = customerService.findByUsername(username);
+        Optional<Customer> otherCustomer = customerService.findByUsername(username);
 
         if (authenticationCustomer != null && username.equals(authenticationCustomer.getUsername())) {
             return new ModelAndView("profile/my-profile")
                     .addObject("authenticationCustomer", modelService.getProfileModel(authenticationCustomer));
-        } else if (otherCustomer != null) {
-            return new ModelAndView("profile/other-profile")
-                    .addObject("otherCustomer", modelService.getProfileModel(otherCustomer));
         } else {
-            return new ModelAndView("errors/not-found");
+            return otherCustomer.map(customer -> new ModelAndView("profile/other-profile")
+                    .addObject("otherCustomer", modelService.getProfileModel(customer))).orElseGet(() -> new ModelAndView("errors/not-found"));
         }
     }
 }

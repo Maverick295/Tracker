@@ -4,6 +4,9 @@ import com.tracker.tracker.entities.Customer;
 import com.tracker.tracker.entities.role.Role;
 import com.tracker.tracker.forms.security.SignUpForm;
 import com.tracker.tracker.repositories.CustomerRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.constraints.NotNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,9 +14,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final PasswordEncoder encoder;
@@ -30,15 +35,17 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void save(Customer customer) {
         customerRepository.save(customer);
+
+        log.info("Save new customer");
     }
 
     @Override
-    public Customer findByUsername(String username) {
+    public Optional<Customer> findByUsername(@NotNull String username) {
         return customerRepository.findByUsername(username);
     }
 
     @Override
-    public Customer findByEmail(String email) {
+    public Optional<Customer> findByEmail(@NotNull String email) {
         return customerRepository.findByEmail(email);
     }
 
@@ -65,21 +72,10 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer getAuthenticatedCustomer() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        return findByUsername(authentication.getName());
-    }
+        log.info("Authentication after change: " + authentication);
+        log.info("Name after change: " + authentication.getName());
 
-    @Override
-    public void saveCustomerAndUpdateSession(Customer customer) {
-        if (customer == null) {
-            throw new IllegalArgumentException("'customer' == null");
-        }
-
-        try {
-            save(customer);
-
-        } catch (Exception e) {
-            throw new RuntimeException("Ошибка во время обновления сессии: ", e);
-        }
+        return findByUsername(authentication.getName()).orElseThrow(EntityNotFoundException::new);
     }
 }
 

@@ -4,6 +4,8 @@ import com.tracker.tracker.entities.Customer;
 import com.tracker.tracker.entities.role.Role;
 import com.tracker.tracker.services.customer.CustomerService;
 import com.tracker.tracker.services.details.CustomUserDetails;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,10 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-
     private final CustomerService customerService;
 
     @Autowired
@@ -30,9 +32,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(@NotNull String username) throws UsernameNotFoundException {
-        Customer customer = customerService.findByUsername(username);
+        Customer customer = customerService.findByUsername(username).orElseThrow(EntityNotFoundException::new);
 
         List<GrantedAuthority> role = getGrantedAuthorities(customer);
+
 
         return CustomUserDetails.build(
                 customer,
@@ -40,7 +43,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         );
     }
 
-    public List<GrantedAuthority> getGrantedAuthorities(@NotNull Customer customer) {
+    private List<GrantedAuthority> getGrantedAuthorities(@NotNull Customer customer) {
         List<GrantedAuthority> role = new ArrayList<>();
         role.add(new SimpleGrantedAuthority(customer.isActive() ? customer.getRole() : Role.BANNED.getAuthority()));
 

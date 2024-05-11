@@ -19,12 +19,20 @@ public class WebSecurityConfig {
         this.authenticationConfiguration = authenticationConfiguration;
     }
 
+//    @Bean
+//    public AuthenticationProvider authenticationProvider() {
+//        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+//        authenticationProvider.setPasswordEncoder(passwordEncoder());
+//        authenticationProvider.setUserDetailsService(userDetailsService);
+//
+//        return authenticationProvider;
+//    }
+
     @Bean
     public SecurityFilterChain securityConfig(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((request) -> request
-                        .requestMatchers("/", "/profile/{username}").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .formLogin((form) -> form
                         .loginPage("/sign-in")
@@ -33,10 +41,11 @@ public class WebSecurityConfig {
                         .permitAll()
                 )
                 .logout((logout) -> logout
-                        .clearAuthentication(true)
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
                         .permitAll()
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
                 );
         return http.build();
     }

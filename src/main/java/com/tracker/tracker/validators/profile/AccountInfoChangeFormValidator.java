@@ -30,13 +30,13 @@ public class AccountInfoChangeFormValidator implements Validator {
         AccountInfoChangeForm form = (AccountInfoChangeForm) target;
 
         if (!customerService.getAuthenticatedCustomer().getEmail().equals(form.getEmail())) {
-            if (Objects.nonNull(customerService.findByEmail(form.getEmail()))) {
+            if (customerService.findByEmail(form.getEmail()).isPresent()) {
                 errors.rejectValue("email", "error.account.email.exists");
             }
         }
 
         if (!customerService.getAuthenticatedCustomer().getUsername().equals(form.getUsername())) {
-            if (Objects.nonNull(customerService.findByUsername(form.getUsername()))) {
+            if (customerService.findByUsername(form.getUsername()).isPresent()) {
                 errors.rejectValue("username", "error.account.username.exists");
             }
         }

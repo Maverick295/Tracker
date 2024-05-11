@@ -4,6 +4,7 @@ import com.tracker.tracker.entities.Customer;
 import com.tracker.tracker.forms.profile.AccountInfoChangeForm;
 import com.tracker.tracker.forms.profile.PasswordChangeForm;
 import com.tracker.tracker.forms.profile.PersonalInfoChangeForm;
+import com.tracker.tracker.services.authentication.AuthenticationService;
 import com.tracker.tracker.services.customer.CustomerService;
 import com.tracker.tracker.services.models.ModelService;
 import com.tracker.tracker.services.profile.ProfileService;
@@ -28,6 +29,7 @@ public class SettingsController {
     private final AccountInfoChangeFormValidator accountInfoChangeFormValidator;
     private final PasswordChangeFormValidator passwordChangeFormValidator;
     private final PersonalInfoChangeFormValidator personalInfoChangeFormValidator;
+    private final AuthenticationService authenticationService;
 
     @Autowired
     public SettingsController(
@@ -36,14 +38,15 @@ public class SettingsController {
             CustomerService customerService,
             AccountInfoChangeFormValidator accountInfoChangeFormValidator,
             PasswordChangeFormValidator passwordChangeFormValidator,
-            PersonalInfoChangeFormValidator personalInfoChangeFormValidator
-    ) {
+            PersonalInfoChangeFormValidator personalInfoChangeFormValidator,
+            AuthenticationService authenticationService) {
         this.modelService = modelService;
         this.profileService = profileService;
         this.customerService = customerService;
         this.accountInfoChangeFormValidator = accountInfoChangeFormValidator;
         this.passwordChangeFormValidator = passwordChangeFormValidator;
         this.personalInfoChangeFormValidator = personalInfoChangeFormValidator;
+        this.authenticationService = authenticationService;
     }
 
     @InitBinder("accountInfoChangeForm")
@@ -99,7 +102,7 @@ public class SettingsController {
         }
 
         Customer authenticationCustomer = profileService.changeAccountInfo(form);
-        customerService.saveCustomerAndUpdateSession(authenticationCustomer);
+        authenticationService.updateSessionAfterChangeInfo(authenticationCustomer);
 
         return RedirectUtil.redirect("/settings/account");
     }

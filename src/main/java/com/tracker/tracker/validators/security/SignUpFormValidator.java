@@ -28,11 +28,11 @@ public class SignUpFormValidator implements Validator {
     public void validate(@NonNull Object target, @NonNull Errors errors) {
         SignUpForm form = (SignUpForm) target;
 
-        if (Objects.nonNull(customerService.findByUsername(form.getUsername()))) {
+        if (customerService.findByUsername(form.getUsername()).isPresent()) {
             errors.rejectValue("username", "error.signup.username.exist");
         }
 
-        if (Objects.nonNull(customerService.findByEmail(form.getEmail()))) {
+        if (customerService.findByEmail(form.getEmail()).isPresent()) {
             errors.rejectValue("email", "error.signup.email.exist");
         }
     }
