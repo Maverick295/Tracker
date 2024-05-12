@@ -1,6 +1,6 @@
 package com.tracker.tracker.forms.company;
 
-public class CompanyCreateForm {
+public class CompanyForm {
     private String companyName; // Название компании
     private String legalEntity; // Юридическое лицо
     private String inn; // ИНН компании
@@ -10,7 +10,6 @@ public class CompanyCreateForm {
     private String actualAddress; // Фактический адрес
     private String email; // Электронная почта
     private String phoneNumber; // Номер телефона
-    private String directorFullName; // ФИО директора
     private String ogrn; // ОГРН компании
     private String okpo; // ОКПО компании
     private String ogrnip;
@@ -96,14 +95,6 @@ public class CompanyCreateForm {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getDirectorFullName() {
-        return directorFullName;
-    }
-
-    public void setDirectorFullName(String directorFullName) {
-        this.directorFullName = directorFullName;
-    }
-
     public String getOgrn() {
         return ogrn;
     }
@@ -124,80 +115,71 @@ public class CompanyCreateForm {
         return ogrnip;
     }
 
-    public CompanyCreateForm setOgrnip(String ogrnip) {
+    public void setOgrnip(String ogrnip) {
         this.ogrnip = ogrnip;
-        return this;
     }
 
     public String getBankName() {
         return bankName;
     }
 
-    public CompanyCreateForm setBankName(String bankName) {
+    public void setBankName(String bankName) {
         this.bankName = bankName;
-        return this;
     }
 
     public String getCorrespondentAccount() {
         return correspondentAccount;
     }
 
-    public CompanyCreateForm setCorrespondentAccount(String correspondentAccount) {
+    public void setCorrespondentAccount(String correspondentAccount) {
         this.correspondentAccount = correspondentAccount;
-        return this;
     }
 
     public String getDirectorName() {
         return directorName;
     }
 
-    public CompanyCreateForm setDirectorName(String directorName) {
+    public void setDirectorName(String directorName) {
         this.directorName = directorName;
-        return this;
     }
 
     public String getDirectorSurname() {
         return directorSurname;
     }
 
-    public CompanyCreateForm setDirectorSurname(String directorSurname) {
+    public void setDirectorSurname(String directorSurname) {
         this.directorSurname = directorSurname;
-        return this;
     }
 
     public String getDirectorPatronymic() {
         return directorPatronymic;
     }
 
-    public CompanyCreateForm setDirectorPatronymic(String directorPatronymic) {
+    public void setDirectorPatronymic(String directorPatronymic) {
         this.directorPatronymic = directorPatronymic;
-        return this;
     }
 
     public String getKpp() {
         return kpp;
     }
 
-    public CompanyCreateForm setKpp(String kpp) {
+    public void setKpp(String kpp) {
         this.kpp = kpp;
-        return this;
     }
 
     public String getBankInn() {
         return bankInn;
     }
 
-    public CompanyCreateForm setBankInn(String bankInn) {
+    public void setBankInn(String bankInn) {
         this.bankInn = bankInn;
-        return this;
     }
 
     public String getBankKpp() {
         return bankKpp;
     }
 
-    public CompanyCreateForm setBankKpp(String bankKpp) {
+    public void setBankKpp(String bankKpp) {
         this.bankKpp = bankKpp;
-        return this;
     }
 }

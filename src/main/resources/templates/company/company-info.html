@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Информация о компании</title>
+</head>
+<body>
+    <h1>Информация о компании</h1>
+    <p><strong>Название компании:</strong> <span th:text="${company.companyName}">Нет данных</span></p>
+    <p><strong>Юридическое лицо:</strong> <span th:text="${company.legalEntity}">Нет данных</span></p>
+    <p><strong>ИНН:</strong> <span th:text="${company.inn}">Нет данных</span></p>
+    <p><strong>Расчетный счет:</strong> <span th:text="${company.bankAccount}">Нет данных</span></p>
+    <p><strong>БИК банка:</strong> <span th:text="${company.bankBik}">Нет данных</span></p>
+    <p><strong>Юридический адрес:</strong> <span th:text="${company.legalAddress}">Нет данных</span></p>
+    <p><strong>Фактический адрес:</strong> <span th:text="${company.actualAddress}">Нет данных</span></p>
+    <p><strong>Email:</strong> <span th:text="${company.email}">Нет данных</span></p>
+    <p><strong>Номер телефона:</strong> <span th:text="${company.phoneNumber}">Нет данных</span></p>
+    <p><strong>ОГРН:</strong> <span th:text="${company.ogrn}">Нет данных</span></p>
+    <p><strong>ОКПО:</strong> <span th:text="${company.okpo}">Нет данных</span></p>
+    <p><strong>Имя директора:</strong> <span th:text="${company.directorName}">Нет данных</span></p>
+    <p><strong>Фамилия директора:</strong> <span th:text="${company.directorSurname}">Нет данных</span></p>
+    <p><strong>Отчество директора:</strong> <span th:text="${company.directorPatronymic}">Нет данных</span></p>
+    <p><strong>Название банка:</strong> <span th:text="${company.bankName}">Нет данных</span></p>
+    <p><strong>Инн банка:</strong> <span th:text="${company.bankInn}">Нет данных</span></p>
+    <p><strong>Кпп банка:</strong> <span th:text="${company.bankKpp}">Нет данных</span></p>
+    <p><strong>Огрнип:</strong> <span th:text="${company.ogrnip}">Нет данных</span></p>
+    <p><strong>Корреспондентский счёт:</strong> <span th:text="${company.correspondentAccount}">Нет данных</span></p>
+    <p><strong>Кпп:</strong> <span th:text="${company.kpp}">Нет данных</span></p>
+
+    <form th:action="@{/company/edit/{uuid}(uuid=${company.getUuid()})}" th:method="get">
+        <button type="submit">Изменить</button>
+    </form>
+
+    <form id="deleteForm" th:action="@{/company/delete/{uuid}(uuid=${company.getUuid()})}" method="post">
+        <button type="button" onclick="deleteCompany()">Удалить</button>
+    </form>
+    <form th:action="@{/company/view}" method="get">
+        <button type="submit" >Назад</button>
+    </form>
+
+    <script>
+        function deleteCompany() {
+            if (confirm("Вы уверены, что хотите удалить?")) {
+                var form = document.getElementById("deleteForm");
+                var uuid = form.getAttribute("action").split("/").pop(); // Получаем UUID из URL
+                fetch("/company/delete/" + uuid, {
+                    method: "DELETE"
+                }).then(response => {
+                    if (response.ok) {
+                        window.location.href = "/company/view"; // Перенаправляем на страницу просмотра компаний
+                    } else {
+                        console.error('Ошибка удаления');
+                    }
+                }).catch(error => {
+                    console.error('Ошибка удаления:', error);
+                });
+            }
+        }
+    </script>
+
+
+</body>
+</html>

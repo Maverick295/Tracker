@@ -5,7 +5,7 @@ import com.tracker.tracker.models.company.CompanyModel;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ModelCompanyServiceImpl implements ModelCompanyService{
+public class ModelCompanyServiceImpl implements ModelCompanyService {
 
     @Override
     public CompanyModel getCompanyModel(Company company) {
@@ -17,11 +17,20 @@ public class ModelCompanyServiceImpl implements ModelCompanyService{
                 .setOgrn(company.getOgrn())
                 .setOkpo(company.getOkpo())
                 .setLegalAddress(company.getLegalAddress())
-                .setDirectorFullName(company.getDirectorFullName())
                 .setInn(company.getInn())
                 .setBankAccount(company.getBankAccount())
                 .setPhoneNumber(company.getPhoneNumber())
                 .setLegalEntity(company.getLegalEntity())
-                .setUuid(company.getUuid());
+                .setUuid(company.getUuid())
+                .setKpp(company.getKpp())
+                .setBankInn(company.getBankInn())
+                .setBankKpp(company.getBankKpp())
+                .setBankName(company.getBankName())
+                .setCorrespondentAccount(company.getCorrespondentAccount())
+                .setKpp(company.getKpp())
+                .setDirectorName(company.getDirectorName())
+                .setDirectorSurname(company.getDirectorSurname())
+                .setDirectorPatronymic(company.getDirectorPatronymic())
+                .setOgrnip(company.getOgrnip());
     }
 }

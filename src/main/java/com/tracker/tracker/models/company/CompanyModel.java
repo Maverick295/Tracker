@@ -10,10 +10,19 @@ public class CompanyModel {
     private String actualAddress; // Фактический адрес компании
     private String email; // Электронная почта компании
     private String phoneNumber; // Номер телефона компании
-    private String directorFullName; // ФИО директора компании
     private String ogrn; // ОГРН компании (если применимо)
     private String okpo; // ОКПО компании (если применимо)
     private String Uuid;
+    private String ogrnip;
+    private String bankName;
+    private String correspondentAccount;
+    private String directorName;
+    private String directorSurname;
+    private String directorPatronymic;
+    private String kpp;
+    private String bankInn;
+    private String bankKpp;
+
     public String getCompanyName() {
         return companyName;
     }
@@ -95,15 +104,6 @@ public class CompanyModel {
         return this;
     }
 
-    public String getDirectorFullName() {
-        return directorFullName;
-    }
-
-    public CompanyModel setDirectorFullName(String directorFullName) {
-        this.directorFullName = directorFullName;
-        return this;
-    }
-
     public String getOgrn() {
         return ogrn;
     }
@@ -128,6 +128,87 @@ public class CompanyModel {
 
     public CompanyModel setUuid(String uuid) {
         Uuid = uuid;
+        return this;
+    }
+
+    public String getOgrnip() {
+        return ogrnip;
+    }
+
+    public CompanyModel setOgrnip(String ogrnip) {
+        this.ogrnip = ogrnip;
+        return this;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public CompanyModel setBankName(String bankName) {
+        this.bankName = bankName;
+        return this;
+    }
+
+    public String getCorrespondentAccount() {
+        return correspondentAccount;
+    }
+
+    public CompanyModel setCorrespondentAccount(String correspondentAccount) {
+        this.correspondentAccount = correspondentAccount;
+        return this;
+    }
+
+    public String getDirectorName() {
+        return directorName;
+    }
+
+    public CompanyModel setDirectorName(String directorName) {
+        this.directorName = directorName;
+        return this;
+    }
+
+    public String getDirectorSurname() {
+        return directorSurname;
+    }
+
+    public CompanyModel setDirectorSurname(String directorSurname) {
+        this.directorSurname = directorSurname;
+        return this;
+    }
+
+    public String getDirectorPatronymic() {
+        return directorPatronymic;
+    }
+
+    public CompanyModel setDirectorPatronymic(String directorPatronymic) {
+        this.directorPatronymic = directorPatronymic;
+        return this;
+    }
+
+    public String getKpp() {
+        return kpp;
+    }
+
+    public CompanyModel setKpp(String kpp) {
+        this.kpp = kpp;
+        return this;
+    }
+
+    public String getBankInn() {
+        return bankInn;
+    }
+
+    public CompanyModel setBankInn(String bankInn) {
+        this.bankInn = bankInn;
+        return this;
+    }
+
+    public String getBankKpp() {
+        return bankKpp;
+    }
+
+    public CompanyModel setBankKpp(String bankKpp) {
+        this.bankKpp = bankKpp;
         return this;
     }
 }

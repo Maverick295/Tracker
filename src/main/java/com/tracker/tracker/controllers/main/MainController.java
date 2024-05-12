@@ -34,8 +34,6 @@ public class MainController {
     ) {
         Customer authenticationCustomer = customerService.getAuthenticatedCustomer();
 
-        authenticationService.setUserAuthentication(authenticationCustomer.getUsername());
-
         return new ModelAndView("main/main-page")
                 .addObject("authenticationCustomer", modelService.getMainPageModel(authenticationCustomer));
     }

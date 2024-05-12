@@ -6,11 +6,15 @@ import com.tracker.tracker.entities.Customer;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Repository
 public interface CompanyRepository extends CrudRepository<Company, Long> {
     Page<Company> findAllByCustomer(Pageable pageable, Customer customer);
+
     Optional<Company> findCompanyByUuid(String uuid);
+
     void deleteByUuid(String uuid);
 }

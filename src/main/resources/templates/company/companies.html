@@ -19,7 +19,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="companyPageInstance, iter : ${companyPage.content}" th:attr="onclick=|window.location.href='${companyPageInstance.getCompanyName()}'|" >
+            <tr th:each="companyPageInstance, iter : ${companyPage.content}" th:attr="onclick=|window.location.href='${companyPageInstance.getUuid()}'|" >
                 <th scope="row" th:text="${iter.index + 1}"></th>
                 <td th:text="${companyPageInstance.getCompanyName()}"></td>
                 <td th:text="${companyPageInstance.getLegalEntity()}"></td>

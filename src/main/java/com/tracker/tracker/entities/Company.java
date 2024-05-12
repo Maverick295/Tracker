@@ -14,6 +14,7 @@ public class Company {
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
     @Column(nullable = false)
     private String companyName; // Название компании
 
@@ -29,15 +30,31 @@ public class Company {
     @Column(nullable = false)
     private String bankBik; // БИК банка, в котором открыт расчетный счет
 
-    private String Uuid;
+    @Column(unique = true)
+    private String uuid;
+
+    @Column(nullable = false)
+    private String ogrnip;
+
+    @Column(nullable = false)
+    private String bankName;
+
+    @Column(nullable = false)
+    private String correspondentAccount;
+
     private String legalAddress; // Юридический адрес компании
     private String actualAddress; // Фактический адрес компании
     private String email; // Электронная почта компании
     private String phoneNumber; // Номер телефона компании
-    private String directorFullName; // ФИО директора компании
     private String ogrn; // ОГРН компании (если применимо)
     private String okpo; // ОКПО компании (если применимо)
     private LocalDateTime dateOfCreate; // Дата создания на сайте
+    private String directorName;
+    private String directorSurname;
+    private String directorPatronymic;
+    private String kpp;
+    private String bankInn;
+    private String bankKpp;
 
     public Long getCompanyId() {
         return companyId;
@@ -137,15 +154,6 @@ public class Company {
         return this;
     }
 
-    public String getDirectorFullName() {
-        return directorFullName;
-    }
-
-    public Company setDirectorFullName(String directorFullName) {
-        this.directorFullName = directorFullName;
-        return this;
-    }
-
     public String getOgrn() {
         return ogrn;
     }
@@ -174,11 +182,92 @@ public class Company {
     }
 
     public String getUuid() {
-        return Uuid;
+        return uuid;
     }
 
-    public Company setUuid(String Uuid) {
-        this.Uuid = Uuid;
+    public Company setUuid(String uuid) {
+        this.uuid = uuid;
+        return this;
+    }
+
+    public String getOgrnip() {
+        return ogrnip;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public String getCorrespondentAccount() {
+        return correspondentAccount;
+    }
+
+    public String getDirectorName() {
+        return directorName;
+    }
+
+    public String getDirectorSurname() {
+        return directorSurname;
+    }
+
+    public String getDirectorPatronymic() {
+        return directorPatronymic;
+    }
+
+    public String getKpp() {
+        return kpp;
+    }
+
+    public String getBankInn() {
+        return bankInn;
+    }
+
+    public String getBankKpp() {
+        return bankKpp;
+    }
+
+    public Company setOgrnip(String ogrnip) {
+        this.ogrnip = ogrnip;
+        return this;
+    }
+
+    public Company setBankName(String bankName) {
+        this.bankName = bankName;
+        return this;
+    }
+
+    public Company setCorrespondentAccount(String correspondentAccount) {
+        this.correspondentAccount = correspondentAccount;
+        return this;
+    }
+
+    public Company setDirectorName(String directorName) {
+        this.directorName = directorName;
+        return this;
+    }
+
+    public Company setDirectorSurname(String directorSurname) {
+        this.directorSurname = directorSurname;
+        return this;
+    }
+
+    public Company setDirectorPatronymic(String directorPatronymic) {
+        this.directorPatronymic = directorPatronymic;
+        return this;
+    }
+
+    public Company setKpp(String kpp) {
+        this.kpp = kpp;
+        return this;
+    }
+
+    public Company setBankInn(String bankInn) {
+        this.bankInn = bankInn;
+        return this;
+    }
+
+    public Company setBankKpp(String bankKpp) {
+        this.bankKpp = bankKpp;
         return this;
     }
 }
