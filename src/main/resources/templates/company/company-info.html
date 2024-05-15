@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Информация о компании</title>
@@ -30,33 +30,10 @@
     <form th:action="@{/company/edit/{uuid}(uuid=${company.getUuid()})}" th:method="get">
         <button type="submit">Изменить</button>
     </form>
-
-    <form id="deleteForm" th:action="@{/company/delete/{uuid}(uuid=${company.getUuid()})}" method="post">
-        <button type="button" onclick="deleteCompany()">Удалить</button>
-    </form>
     <form th:action="@{/company/view}" method="get">
         <button type="submit" >Назад</button>
     </form>
 
-    <script>
-        function deleteCompany() {
-            if (confirm("Вы уверены, что хотите удалить?")) {
-                var form = document.getElementById("deleteForm");
-                var uuid = form.getAttribute("action").split("/").pop(); // Получаем UUID из URL
-                fetch("/company/delete/" + uuid, {
-                    method: "DELETE"
-                }).then(response => {
-                    if (response.ok) {
-                        window.location.href = "/company/view"; // Перенаправляем на страницу просмотра компаний
-                    } else {
-                        console.error('Ошибка удаления');
-                    }
-                }).catch(error => {
-                    console.error('Ошибка удаления:', error);
-                });
-            }
-        }
-    </script>
 
 
 </body>

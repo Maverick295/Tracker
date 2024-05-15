@@ -9,6 +9,7 @@ import com.tracker.tracker.services.customer.CustomerService;
 import com.tracker.tracker.services.models.ModelCompanyService;
 import com.tracker.tracker.utils.RedirectUtil;
 import com.tracker.tracker.validators.company.CompanyFormValidator;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -57,11 +58,10 @@ public class CompanyController {
 
     @GetMapping("/{uuid}")
     public ModelAndView getCompanyInfo(@PathVariable String uuid) {
-        Optional<Company> optionalCompany = companyService.findByUuid(uuid);
-        Company company = optionalCompany.orElse(null);
+        Company company = companyService.findByUuid(uuid).orElseThrow(EntityNotFoundException::new);
         Customer currentCustomer = customerService.getAuthenticatedCustomer();
 
-        if (company != null && company.getCustomer().equals(currentCustomer)) {
+        if (company.getCustomer().equals(currentCustomer)) {
             // Если да, возвращаем информацию о компании
             return new ModelAndView("company/company-info")
                     .addObject("company", modelCompanyService.getCompanyModel(company));
@@ -74,11 +74,10 @@ public class CompanyController {
 
     @DeleteMapping("/delete/{uuid}")
     public ModelAndView deleteCompany(@PathVariable String uuid) {
-        Optional<Company> optionalCompany = companyService.findByUuid(uuid);
-        Company company = optionalCompany.orElse(null);
+        Company company = companyService.findByUuid(uuid).orElseThrow(EntityNotFoundException::new);
         Customer currentCustomer = customerService.getAuthenticatedCustomer();
 
-        if (company != null && company.getCustomer().equals(currentCustomer)) {
+        if (company.getCustomer().equals(currentCustomer)) {
             companyService.deleteCompanyByUuid(uuid);
             return RedirectUtil.redirect("/company/view");
         } else {
@@ -99,11 +98,10 @@ public class CompanyController {
 
     @GetMapping("/edit/{uuid}")
     public ModelAndView updateCompanyInfo(@PathVariable String uuid) {
-        Optional<Company> optionalCompany = companyService.findByUuid(uuid);
-        Company company = optionalCompany.orElse(null);
+        Company company = companyService.findByUuid(uuid).orElseThrow(EntityNotFoundException::new);
         Customer currentCustomer = customerService.getAuthenticatedCustomer();
 
-        if (company != null && company.getCustomer().equals(currentCustomer)) {
+        if (company.getCustomer().equals(currentCustomer)) {
             return new ModelAndView("company/company-edit")
                     .addObject("company", modelCompanyService.getCompanyModel(company))
                     .addObject("companyForm", new CompanyForm());
@@ -117,15 +115,16 @@ public class CompanyController {
 
     @PostMapping("/edit/{uuid}")
     public ModelAndView updateCompanyAction(@ModelAttribute @Valid CompanyForm form, @PathVariable String uuid) {
-        Optional<Company> optionalCompany = companyService.findByUuid(uuid);
-        Company company = optionalCompany.orElse(null);
+        Company company = companyService.findByUuid(uuid).orElseThrow(EntityNotFoundException::new);
         Customer currentCustomer = customerService.getAuthenticatedCustomer();
 
-        if (company != null && company.getCustomer().equals(currentCustomer)) {
+        if (company.getCustomer().equals(currentCustomer)) {
+            String redirectUrl = String.join("", "/company/", uuid);
+
             company = companyService.editCompany(form, uuid);
             companyService.save(company);
 
-            return RedirectUtil.redirect("/company/" + uuid);
+            return RedirectUtil.redirect(redirectUrl);
         } else {
             // Если нет, возвращаем ошибку доступа или что-то еще
             return new ModelAndView("error")

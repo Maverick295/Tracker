@@ -13,7 +13,7 @@ public interface CompanyService {
     Company createCompany(CompanyForm form);
     void save(Company company);
     Company editCompany(CompanyForm form, String uuid);
-    void deleteCompany(Long id);
+    void deleteCompanyById(Long id);
     Optional<Company> findById(Long id);
     Page<CompanyModel> getCompanies(Pageable pageable, Customer customer);
     String generateCompanyUuid();
