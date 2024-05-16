@@ -3,6 +3,7 @@ package com.tracker.tracker.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "customers")
@@ -10,6 +11,7 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long customerId;
+    private String uuid;
     private String email;
     private String phone;
     private String password;
@@ -26,6 +28,15 @@ public class Customer {
 
     public Long getCustomerId() {
         return customerId;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public Customer setUuid(String uuid) {
+        this.uuid = uuid;
+        return this;
     }
 
     public String getEmail() {

@@ -1,9 +1,10 @@
 package com.tracker.tracker.validators.profile;
 
 import com.tracker.tracker.forms.profile.PasswordChangeForm;
-import com.tracker.tracker.services.authentication.AuthenticationService;
+import com.tracker.tracker.services.customer.CustomerService;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -12,24 +13,27 @@ import org.springframework.validation.Validator;
 @Component
 public class PasswordChangeFormValidator implements Validator {
     private final PasswordEncoder encoder;
-    private final AuthenticationService authenticationService;
+    private final CustomerService customerService;
 
     @Autowired
-    public PasswordChangeFormValidator(PasswordEncoder encoder, AuthenticationService authenticationService) {
+    public PasswordChangeFormValidator(
+            PasswordEncoder encoder,
+            CustomerService customerService
+    ) {
         this.encoder = encoder;
-        this.authenticationService = authenticationService;
+        this.customerService = customerService;
     }
 
     @Override
-    public boolean supports(Class<?> clazz) {
+    public boolean supports(@NonNull Class<?> clazz) {
         return PasswordChangeForm.class.equals(clazz);
     }
 
     @Override
-    public void validate(Object target, Errors errors) {
+    public void validate(@NonNull Object target, @NonNull Errors errors) {
         PasswordChangeForm form = (PasswordChangeForm) target;
 
-        if (!encoder.matches(form.getOldPassword(), authenticationService.getAuthentication().getPassword())) {
+        if (!encoder.matches(form.getOldPassword(), customerService.getAuthenticatedCustomer().getPassword())) {
             errors.rejectValue("oldPassword", "error.password.old.invalid");
         }
 

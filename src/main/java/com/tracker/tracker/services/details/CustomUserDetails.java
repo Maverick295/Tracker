@@ -1,38 +1,37 @@
-package com.tracker.tracker.services.principal;
+package com.tracker.tracker.services.details;
 
+import com.tracker.tracker.entities.Customer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
 
-public class PrincipalServiceImpl implements UserDetails, PrincipalService {
-    private Long id;
+public class CustomUserDetails implements UserDetails {
     private String username;
-    private String email;
     private String password;
-    private List<GrantedAuthority> role;
+    private List<GrantedAuthority> roles;
     private boolean active;
 
-    public PrincipalServiceImpl(
-            Long id,
-            String username,
-            String email,
-            String password,
-            List<GrantedAuthority> role,
-            boolean active
-    ) {
-        this.id = id;
+    public CustomUserDetails(String username, String password, List<GrantedAuthority> roles, boolean active) {
         this.username = username;
-        this.email = email;
         this.password = password;
-        this.role = role;
+        this.roles = roles;
         this.active = active;
+    }
+
+    public static CustomUserDetails build(Customer customer, List<GrantedAuthority> roles) {
+        return new CustomUserDetails(
+                customer.getUsername(),
+                customer.getPassword(),
+                roles,
+                customer.isActive()
+        );
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return role;
+        return roles;
     }
 
     @Override
@@ -63,10 +62,5 @@ public class PrincipalServiceImpl implements UserDetails, PrincipalService {
     @Override
     public boolean isEnabled() {
         return active;
-    }
-
-    @Override
-    public Long getId() {
-        return id;
     }
 }

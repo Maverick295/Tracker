@@ -1,12 +1,9 @@
 package com.tracker.tracker.services.authentication;
 
-import com.tracker.tracker.entities.Customer;
-import org.springframework.security.core.GrantedAuthority;
-
-import java.util.List;
+import org.springframework.security.core.Authentication;
 
 public interface AuthenticationService {
-    List<GrantedAuthority> getGrantedAuthorities(Customer customer);
-    Customer getAuthentication();
-    void saveCustomerAndUpdateSession(Customer customer);
+    void setUserAuthentication(String username);
+    void setAuthentication(Authentication authentication);
+    void setAuthenticate(Authentication authentication);
 }
