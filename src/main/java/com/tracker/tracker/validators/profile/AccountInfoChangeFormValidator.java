@@ -29,6 +29,16 @@ public class AccountInfoChangeFormValidator implements Validator {
     public void validate(@NonNull Object target, @NonNull Errors errors) {
         AccountInfoChangeForm form = (AccountInfoChangeForm) target;
 
+        if (StringUtils.isBlank(form.getUsername())) {
+            errors.rejectValue("username", "error.account.username.empty");
+            return;
+        }
+
+        if (StringUtils.isBlank(form.getEmail())) {
+            errors.rejectValue("email", "error.account.email.empty");
+            return;
+        }
+
         if (!customerService.getAuthenticatedCustomer().getEmail().equals(form.getEmail())) {
             if (customerService.findByEmail(form.getEmail()).isPresent()) {
                 errors.rejectValue("email", "error.account.email.exists");
@@ -39,14 +49,6 @@ public class AccountInfoChangeFormValidator implements Validator {
             if (customerService.findByUsername(form.getUsername()).isPresent()) {
                 errors.rejectValue("username", "error.account.username.exists");
             }
-        }
-
-        if (StringUtils.isBlank(form.getUsername())) {
-            errors.rejectValue("username", "error.account.username.empty");
-        }
-
-        if (StringUtils.isBlank(form.getEmail())) {
-            errors.rejectValue("email", "error.account.email.empty");
         }
     }
 }

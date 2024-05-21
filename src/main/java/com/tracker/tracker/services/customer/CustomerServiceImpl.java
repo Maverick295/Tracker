@@ -35,8 +35,6 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void save(Customer customer) {
         customerRepository.save(customer);
-
-        log.info("Save new customer");
     }
 
     @Override
@@ -71,9 +69,6 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer getAuthenticatedCustomer() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        log.info("Authentication after change: " + authentication);
-        log.info("Name after change: " + authentication.getName());
 
         return findByUsername(authentication.getName()).orElseThrow(EntityNotFoundException::new);
     }

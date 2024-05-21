@@ -48,7 +48,8 @@ public class SignUpController {
     ) {
         if (result.hasErrors()) {
             return new ModelAndView("security/sign-up")
-                    .addObject("signUpForm", new SignUpForm());
+                    .addObject("signUpForm", new SignUpForm())
+                    .addObject("username", "");
         }
 
         Customer customer = customerService.createCustomer(form);

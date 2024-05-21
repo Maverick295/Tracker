@@ -5,6 +5,8 @@ import com.tracker.tracker.models.main.MainPageModel;
 import com.tracker.tracker.models.profile.ProfileModel;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 public class ModelServiceImpl implements ModelService {
 
@@ -20,11 +22,7 @@ public class ModelServiceImpl implements ModelService {
 
     @Override
     public MainPageModel getMainPageModel(Customer customer) {
-        if (customer != null) {
-            return new MainPageModel()
-                    .setUsername(customer.getUsername());
-        }
-
-        return new MainPageModel();
+        return new MainPageModel()
+                .setUsername(customer.getUsername());
     }
 }

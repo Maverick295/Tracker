@@ -5,6 +5,7 @@ import com.tracker.tracker.services.authentication.AuthenticationService;
 import com.tracker.tracker.services.customer.CustomerService;
 import com.tracker.tracker.services.models.ModelService;
 import com.tracker.tracker.utils.RedirectUtil;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/")
@@ -33,7 +36,7 @@ public class HomeController {
 
     @GetMapping
     public ModelAndView homePageBeforeLogin(Authentication authentication) {
-        if (authentication != null && authentication.isAuthenticated()) {
+        if (Objects.nonNull(authentication) && authentication.isAuthenticated()) {
             return RedirectUtil.redirect("/home");
         }
 
@@ -47,6 +50,6 @@ public class HomeController {
         authenticationService.setUserAuthentication(authenticatedCustomer.getUsername());
 
         return new ModelAndView("home/home-after")
-                .addObject("authenticatedCustomer", modelService.getProfileModel(authenticatedCustomer));
+                .addObject("authenticatedCustomer", modelService.getMainPageModel(authenticatedCustomer));
     }
 }

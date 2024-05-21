@@ -20,15 +20,8 @@ public class SignInController {
         this.customerService = customerService;
     }
 
-
     @GetMapping("/sign-in")
     public ModelAndView loginForm() {
         return new ModelAndView("security/sign-in");
-    }
-
-    @PostMapping("/sign-in")
-    public ModelAndView login() {
-
-        return RedirectUtil.redirect("/");
     }
 }

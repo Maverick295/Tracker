@@ -14,10 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
-@Slf4j
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final CustomUserDetailsService customUserDetailsService;
-    private final AuthenticationManager authenticationManager;
     private final CustomerService customerService;
 
     @Autowired
@@ -27,16 +25,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             CustomerService customerService
     ) {
         this.customUserDetailsService = customUserDetailsService;
-        this.authenticationManager = authenticationManager;
         this.customerService = customerService;
     }
 
     @Override
     public void setUserAuthentication(@NotNull String username) {
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-
         setAuthentication(
-                new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities())
+                new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
+                )
         );
     }
 
@@ -46,14 +46,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public void setAuthenticate(@NotNull Authentication authentication) {
-       setAuthentication(authenticationManager.authenticate(authentication));
-    }
-
-    @Override
     public void updateSessionAfterChangeInfo(Customer customer) {
         customerService.save(customer);
-        SecurityContextHolder.getContext().setAuthentication(null);
+
         setUserAuthentication(customer.getUsername());
     }
 }
