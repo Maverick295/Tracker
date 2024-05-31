@@ -28,7 +28,8 @@ public class HomeController {
     public HomeController(
             CustomerService customerService,
             ModelService modelService,
-            AuthenticationService authenticationService) {
+            AuthenticationService authenticationService
+    ) {
         this.customerService = customerService;
         this.modelService = modelService;
         this.authenticationService = authenticationService;
@@ -46,7 +47,6 @@ public class HomeController {
     @GetMapping("/home")
     public ModelAndView homePageAfterLogin() {
         Customer authenticatedCustomer = customerService.getAuthenticatedCustomer();
-
         authenticationService.setUserAuthentication(authenticatedCustomer.getUsername());
 
         return new ModelAndView("home/home-after")

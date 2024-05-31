@@ -1,12 +1,9 @@
 package com.tracker.tracker.configurations;
 
-import com.tracker.tracker.services.details.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,21 +15,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class WebSecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
-    private final CustomUserDetailsService userDetailsService;
 
     @Autowired
-    public WebSecurityConfig(AuthenticationConfiguration authenticationConfiguration, CustomUserDetailsService userDetailsService) {
+    public WebSecurityConfig(AuthenticationConfiguration authenticationConfiguration) {
         this.authenticationConfiguration = authenticationConfiguration;
-        this.userDetailsService = userDetailsService;
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        authenticationProvider.setUserDetailsService(userDetailsService);
-
-        return authenticationProvider;
     }
 
     @Bean

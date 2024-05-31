@@ -88,7 +88,7 @@ public class SettingsController {
                 .addObject("authenticationCustomer", modelService.getProfileModel(authenticationCustomer));
     }
 
-    @PostMapping("/account")
+    @PatchMapping("/account")
     public ModelAndView accountChangeInfo(
             @ModelAttribute @Valid AccountInfoChangeForm form,
             BindingResult result
@@ -107,7 +107,7 @@ public class SettingsController {
         return RedirectUtil.redirect("/settings/account");
     }
 
-    @PostMapping("/password")
+    @PatchMapping("/password")
     public ModelAndView passwordChange(
             @ModelAttribute @Valid PasswordChangeForm form,
             BindingResult result
@@ -123,7 +123,7 @@ public class SettingsController {
         return RedirectUtil.redirect("/settings/password");
     }
 
-    @PostMapping("/personal")
+    @PatchMapping("/personal")
     public ModelAndView personalChangeInfo(
             @ModelAttribute @Valid PersonalInfoChangeForm form,
             BindingResult result

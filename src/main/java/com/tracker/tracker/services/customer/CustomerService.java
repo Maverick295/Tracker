@@ -11,5 +11,7 @@ public interface CustomerService {
     Optional<Customer> findByEmail(String email);
     Customer createCustomer(SignUpForm form);
     String generateUserUuid();
+    Customer getCustomerByUsername(String username);
+    Customer getCustomerByEmail(String email);
     Customer getAuthenticatedCustomer();
 }

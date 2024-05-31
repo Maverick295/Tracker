@@ -67,10 +67,23 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public Customer getCustomerByUsername(String username) {
+        return findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("Не удалось найти пользователя с таким именем"));
+    }
+
+    @Override
+    public Customer getCustomerByEmail(String email) {
+        return findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Не удалось найти пользователя с такой почтой"));
+    }
+
+    @Override
     public Customer getAuthenticatedCustomer() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        return findByUsername(authentication.getName()).orElseThrow(EntityNotFoundException::new);
+        return findByUsername(authentication.getName())
+                .orElseThrow(() -> new EntityNotFoundException("Авторизованного пользователя с таким именем не существует"));
     }
 }
 

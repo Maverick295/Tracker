@@ -2,7 +2,6 @@ package com.tracker.tracker.services.details.service;
 
 import com.tracker.tracker.entities.Customer;
 import com.tracker.tracker.entities.role.Role;
-import com.tracker.tracker.repositories.CustomerRepository;
 import com.tracker.tracker.services.customer.CustomerService;
 import com.tracker.tracker.services.details.CustomUserDetails;
 import jakarta.persistence.EntityNotFoundException;
@@ -21,17 +20,17 @@ import java.util.List;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    private final CustomerRepository customerRepository;
+    private final CustomerService customerService;
 
     @Autowired
-    public CustomUserDetailsService(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
+    public CustomUserDetailsService(CustomerService customerService) {
+        this.customerService = customerService;
     }
 
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(@NotNull String username) throws UsernameNotFoundException {
-        Customer customer = customerRepository.findByUsername(username).orElseThrow(EntityNotFoundException::new);
+        Customer customer = customerService.getCustomerByUsername(username);
 
         List<GrantedAuthority> role = getGrantedAuthorities(customer);
 

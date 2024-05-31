@@ -7,9 +7,9 @@
 <body>
 <h1>Profile</h1>
 <h3>Username:</h3>
-<p th:text="'@' + ${authenticationCustomer.getUsername()}"></p>
+<p th:text="'@' + ${authenticatedCustomer.getUsername()}"></p>
 <h3>Email address</h3>
-<p th:text="${authenticationCustomer.getEmail()}"></p>
+<p th:text="${authenticatedCustomer.getEmail()}"></p>
 
 <div>
     <a th:href="@{/settings/account}">Settings</a>
