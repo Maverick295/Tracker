@@ -22,7 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/settings")
-public class SettingsController {
+public class ProfileRestController {
     private final ModelService modelService;
     private final ProfileService profileService;
     private final CustomerService customerService;
@@ -32,14 +32,15 @@ public class SettingsController {
     private final AuthenticationService authenticationService;
 
     @Autowired
-    public SettingsController(
+    public ProfileRestController(
             ModelService modelService,
             ProfileService profileService,
             CustomerService customerService,
             AccountInfoChangeFormValidator accountInfoChangeFormValidator,
             PasswordChangeFormValidator passwordChangeFormValidator,
             PersonalInfoChangeFormValidator personalInfoChangeFormValidator,
-            AuthenticationService authenticationService) {
+            AuthenticationService authenticationService
+    ) {
         this.modelService = modelService;
         this.profileService = profileService;
         this.customerService = customerService;
@@ -64,30 +65,6 @@ public class SettingsController {
         binder.addValidators(personalInfoChangeFormValidator);
     }
 
-    @GetMapping("/account")
-    public ModelAndView accountSetting() {
-        Customer authenticationCustomer = customerService.getAuthenticatedCustomer();
-
-        return new ModelAndView("profile/settings/account")
-                .addObject("accountInfoChangeForm", new AccountInfoChangeForm())
-                .addObject("authenticationCustomer", modelService.getProfileModel(authenticationCustomer));
-    }
-
-    @GetMapping("/password")
-    public ModelAndView passwordSetting() {
-        return new ModelAndView("profile/settings/password")
-                .addObject("passwordChangeForm", new PasswordChangeForm());
-    }
-
-    @GetMapping("/personal")
-    public ModelAndView personalSetting() {
-        Customer authenticationCustomer = customerService.getAuthenticatedCustomer();
-
-        return new ModelAndView("profile/settings/personal")
-                .addObject("personalInfoChangeForm", new PersonalInfoChangeForm())
-                .addObject("authenticationCustomer", modelService.getProfileModel(authenticationCustomer));
-    }
-
     @PatchMapping("/account")
     public ModelAndView accountChangeInfo(
             @ModelAttribute @Valid AccountInfoChangeForm form,
@@ -100,9 +77,7 @@ public class SettingsController {
                     .addObject("accountInfoChangeForm", new AccountInfoChangeForm())
                     .addObject("authenticationCustomer", modelService.getProfileModel(authenticationCustomer));
         }
-
         Customer authenticationCustomer = profileService.changeAccountInfo(form);
-        authenticationService.updateSessionAfterChangeInfo(authenticationCustomer);
 
         return RedirectUtil.redirect("/settings/account");
     }
@@ -116,7 +91,6 @@ public class SettingsController {
             return new ModelAndView("profile/settings/password")
                     .addObject("passwordChangeForm", new PasswordChangeForm());
         }
-
         Customer authenticationCustomer = profileService.changePasswordInfo(form);
         customerService.save(authenticationCustomer);
 
@@ -135,7 +109,6 @@ public class SettingsController {
                     .addObject("personalInfoChangeForm", new PersonalInfoChangeForm())
                     .addObject("authenticationCustomer", modelService.getProfileModel(authenticationCustomer));
         }
-
         Customer authenticationCustomer = profileService.changePersonalInfo(form);
         customerService.save(authenticationCustomer);
 

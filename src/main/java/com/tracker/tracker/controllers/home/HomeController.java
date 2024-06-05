@@ -1,12 +1,10 @@
-package com.tracker.tracker.controllers.main;
+package com.tracker.tracker.controllers.home;
 
 import com.tracker.tracker.entities.Customer;
 import com.tracker.tracker.services.authentication.AuthenticationService;
 import com.tracker.tracker.services.customer.CustomerService;
 import com.tracker.tracker.services.models.ModelService;
 import com.tracker.tracker.utils.RedirectUtil;
-import jakarta.servlet.http.HttpSession;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -18,7 +16,6 @@ import java.util.Objects;
 
 @Controller
 @RequestMapping("/")
-@Slf4j
 public class HomeController {
     private final CustomerService customerService;
     private final ModelService modelService;

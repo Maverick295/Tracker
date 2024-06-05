@@ -1,8 +1,7 @@
 package com.tracker.tracker.services.authentication;
 
-import com.tracker.tracker.entities.Customer;
 import com.tracker.tracker.services.customer.CustomerService;
-import com.tracker.tracker.services.details.service.CustomUserDetailsService;
+import com.tracker.tracker.details.CustomUserDetailsService;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,12 +39,5 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public void setAuthentication(@NotNull Authentication authentication) {
         SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
-
-    @Override
-    public void updateSessionAfterChangeInfo(Customer customer) {
-        customerService.save(customer);
-
-        setUserAuthentication(customer.getUsername());
     }
 }

@@ -1,10 +1,8 @@
-package com.tracker.tracker.services.details.service;
+package com.tracker.tracker.details;
 
 import com.tracker.tracker.entities.Customer;
 import com.tracker.tracker.entities.role.Role;
 import com.tracker.tracker.services.customer.CustomerService;
-import com.tracker.tracker.services.details.CustomUserDetails;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;

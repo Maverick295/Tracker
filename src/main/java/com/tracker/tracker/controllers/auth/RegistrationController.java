@@ -1,4 +1,4 @@
-package com.tracker.tracker.controllers.security;
+package com.tracker.tracker.controllers.auth;
 
 import com.tracker.tracker.entities.Customer;
 import com.tracker.tracker.forms.security.SignUpForm;
@@ -6,23 +6,24 @@ import com.tracker.tracker.services.customer.CustomerService;
 import com.tracker.tracker.utils.RedirectUtil;
 import com.tracker.tracker.validators.security.SignUpFormValidator;
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Objects;
+
 @Controller
-@RequestMapping("/sign-up")
-@Slf4j
-public class SignUpController {
+@RequestMapping("/registration")
+public class RegistrationController {
     private final SignUpFormValidator signUpFormValidator;
     private final CustomerService customerService;
 
     @Autowired
-    public SignUpController(
+    public RegistrationController(
             SignUpFormValidator signUpFormValidator,
             CustomerService customerService
     ) {
@@ -36,8 +37,12 @@ public class SignUpController {
     }
 
     @GetMapping
-    public ModelAndView registrationGet() {
-        return new ModelAndView("security/sign-up")
+    public ModelAndView registrationGet(Authentication authentication) {
+        if (Objects.nonNull(authentication) && authentication.isAuthenticated()) {
+            return RedirectUtil.redirect("/home");
+        }
+
+        return new ModelAndView("/security/registration")
                 .addObject("signUpForm", new SignUpForm());
     }
 
@@ -47,14 +52,13 @@ public class SignUpController {
             BindingResult result
     ) {
         if (result.hasErrors()) {
-            return new ModelAndView("security/sign-up")
+            return new ModelAndView("/security/registration")
                     .addObject("signUpForm", new SignUpForm())
                     .addObject("username", "");
         }
-
         Customer customer = customerService.createCustomer(form);
         customerService.save(customer);
 
-        return RedirectUtil.redirect("/sign-in");
+        return RedirectUtil.redirect("/login");
     }
 }

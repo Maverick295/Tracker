@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Редактирование информации о компании</title>
+    <title>Изменение данных о компании - StockTracker</title>
 </head>
     <body>
-    <h1>Редактирование информации о компании</h1>
+    <h1>Изменение</h1>
 
     <form th:action="@{/company/edit/{uuid}(uuid=${company.getUuid()})}" th:method="post" th:object="${companyForm}">
         <p><strong>Название компании:</strong> <input type="text" name="companyName" th:value="${company.companyName}"></p>
@@ -33,7 +33,7 @@
         </div>
     </form>
     <form th:action="@{/company/{uuid}(uuid=${company.getUuid()})}" th:method="get">
-        <button type="submit">Отмена</button>
+        <button type="reset">Отмена</button>
     </form>
     </body>
 </html>
