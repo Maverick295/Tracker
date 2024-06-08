@@ -22,7 +22,6 @@ public class CompanyForm {
     private String bankInn;
     private String bankKpp;
 
-    // Геттеры и сеттеры для полей
     public String getCompanyName() {
         return companyName;
     }

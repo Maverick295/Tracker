@@ -1,19 +1,21 @@
 package com.tracker.tracker.controllers.profile;
 
 import com.tracker.tracker.entities.Customer;
+import com.tracker.tracker.forms.profile.AccountInfoChangeForm;
+import com.tracker.tracker.forms.profile.PasswordChangeForm;
+import com.tracker.tracker.forms.profile.PersonalInfoChangeForm;
+import com.tracker.tracker.models.profile.ProfileModel;
 import com.tracker.tracker.services.customer.CustomerService;
 import com.tracker.tracker.services.models.ModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-@Controller
-@RequestMapping("/profile")
+@RestController
 public class ProfileController {
     private final CustomerService customerService;
     private final ModelService modelService;
@@ -27,21 +29,47 @@ public class ProfileController {
         this.modelService = modelService;
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/profile/{username}")
     public ModelAndView profile(
-            @PathVariable String username
-    ) {
-        Customer authenticationCustomer = customerService.getAuthenticatedCustomer();
-        Customer otherCustomer = customerService.findByUsername(username);
+            @PathVariable String username,
+            Authentication authentication
+    ){
+        Customer authenticatedCustomer = customerService.getAuthenticatedCustomer();
+        ProfileModel authenticatedCustomerModel = modelService.getProfileModel(authenticatedCustomer);
 
-        if (authenticationCustomer != null && username.equals(authenticationCustomer.getUsername())) {
-            return new ModelAndView("profile/my-profile")
-                    .addObject("authenticationCustomer", modelService.getProfileModel(authenticationCustomer));
-        } else if (otherCustomer != null) {
-            return new ModelAndView("profile/other-profile")
-                    .addObject("otherCustomer", modelService.getProfileModel(otherCustomer));
-        } else {
-            return new ModelAndView("errors/not-found");
+        Customer otherCustomer = customerService.getCustomerByUsername(username);
+        ProfileModel otherCustomerModel = modelService.getProfileModel(otherCustomer);
+
+        if (!(authentication.isAuthenticated() && authenticatedCustomer.getUsername().equals(otherCustomer.getUsername()))) {
+            return new ModelAndView("/profile/other-profile")
+                    .addObject("otherCustomer", otherCustomerModel);
         }
+
+        return new ModelAndView("/profile/auth-profile")
+                .addObject("authenticatedCustomer", authenticatedCustomerModel);
+    }
+
+    @GetMapping("/settings/account")
+    public ModelAndView accountSetting() {
+        Customer authenticationCustomer = customerService.getAuthenticatedCustomer();
+
+        return new ModelAndView("/profile/settings/account")
+                .addObject("accountInfoChangeForm", new AccountInfoChangeForm())
+                .addObject("authenticationCustomer", modelService.getProfileModel(authenticationCustomer));
+    }
+
+    @GetMapping("/settings/password")
+    public ModelAndView passwordSetting() {
+        return new ModelAndView("/profile/settings/password")
+                .addObject("passwordChangeForm", new PasswordChangeForm());
+    }
+
+    @GetMapping("/settings/personal")
+    public ModelAndView personalSetting() {
+        Customer authenticationCustomer = customerService.getAuthenticatedCustomer();
+
+        return new ModelAndView("/profile/settings/personal")
+                .addObject("personalInfoChangeForm", new PersonalInfoChangeForm())
+                .addObject("authenticationCustomer", modelService.getProfileModel(authenticationCustomer));
     }
 }

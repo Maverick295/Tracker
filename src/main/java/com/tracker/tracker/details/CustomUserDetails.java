@@ -1,4 +1,4 @@
-package com.tracker.tracker.services.details;
+package com.tracker.tracker.details;
 
 import com.tracker.tracker.entities.Customer;
 import org.springframework.security.core.GrantedAuthority;

@@ -13,8 +13,6 @@ import java.util.Optional;
 @Repository
 public interface CompanyRepository extends CrudRepository<Company, Long> {
     Page<Company> findAllByCustomer(Pageable pageable, Customer customer);
-
     Optional<Company> findCompanyByUuid(String uuid);
-
     void deleteByUuid(String uuid);
 }

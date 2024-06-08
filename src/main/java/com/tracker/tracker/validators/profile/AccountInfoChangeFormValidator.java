@@ -1,23 +1,20 @@
 package com.tracker.tracker.validators.profile;
 
 import com.tracker.tracker.forms.profile.AccountInfoChangeForm;
-import com.tracker.tracker.services.customer.CustomerService;
-import io.micrometer.common.util.StringUtils;
+import com.tracker.tracker.utils.validate.AccountUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import java.util.Objects;
-
 @Component
 public class AccountInfoChangeFormValidator implements Validator {
-    private final CustomerService customerService;
+    private final AccountUtil accountUtil;
 
     @Autowired
-    public AccountInfoChangeFormValidator(CustomerService customerService) {
-        this.customerService = customerService;
+    public AccountInfoChangeFormValidator(AccountUtil accountUtil) {
+        this.accountUtil = accountUtil;
     }
 
     @Override
@@ -29,24 +26,18 @@ public class AccountInfoChangeFormValidator implements Validator {
     public void validate(@NonNull Object target, @NonNull Errors errors) {
         AccountInfoChangeForm form = (AccountInfoChangeForm) target;
 
-        if (!customerService.getAuthenticatedCustomer().getEmail().equals(form.getEmail())) {
-            if (Objects.nonNull(customerService.findByEmail(form.getEmail()))) {
-                errors.rejectValue("email", "error.account.email.exists");
-            }
+        if (!accountUtil.validChangedUsername(form.getUsername())) {
+            errors.rejectValue(
+                    "username",
+                    "error.account.username.valid"
+            );
         }
 
-        if (!customerService.getAuthenticatedCustomer().getUsername().equals(form.getUsername())) {
-            if (Objects.nonNull(customerService.findByUsername(form.getUsername()))) {
-                errors.rejectValue("username", "error.account.username.exists");
-            }
-        }
-
-        if (StringUtils.isBlank(form.getUsername())) {
-            errors.rejectValue("username", "error.account.username.empty");
-        }
-
-        if (StringUtils.isBlank(form.getEmail())) {
-            errors.rejectValue("email", "error.account.email.empty");
+        if (accountUtil.validChangedEmail(form.getEmail())) {
+            errors.rejectValue(
+                    "email",
+                    "error.account.email.valid"
+            );
         }
     }
 }

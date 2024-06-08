@@ -1,5 +1,6 @@
 package com.tracker.tracker.configurations;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
 
+    @Autowired
     public WebSecurityConfig(AuthenticationConfiguration authenticationConfiguration) {
         this.authenticationConfiguration = authenticationConfiguration;
     }
@@ -23,19 +25,21 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityConfig(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((request) -> request
-                        .anyRequest().permitAll()
+                        .requestMatchers("/", "/login", "/registration").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
-                        .loginPage("/sign-in")
-                        .failureUrl("/sign-in")
-                        .defaultSuccessUrl("/")
+                        .loginPage("/login")
+                        .failureUrl("/login")
+                        .defaultSuccessUrl("/home")
                         .permitAll()
                 )
                 .logout((logout) -> logout
-                        .clearAuthentication(true)
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
                         .permitAll()
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
                 );
         return http.build();
     }

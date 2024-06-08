@@ -10,13 +10,12 @@ import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 public interface CompanyService {
+    Optional<Company> findByUuid(String uuid);
+    void deleteCompanyByUuid(String uuid);
+    Company getCompanyByUuid(String uuid);
     Company createCompany(CompanyForm form);
     void save(Company company);
     Company editCompany(CompanyForm form, String uuid);
-    void deleteCompanyById(Long id);
-    Optional<Company> findById(Long id);
     Page<CompanyModel> getCompanies(Pageable pageable, Customer customer);
     String generateCompanyUuid();
-    Optional<Company> findByUuid(String uuid);
-    void deleteCompanyByUuid(String uuid);
 }
