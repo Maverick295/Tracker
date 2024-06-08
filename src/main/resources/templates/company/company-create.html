@@ -2,108 +2,108 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Создание компании - StockTracker</title>
+    <title>Create Company</title>
 </head>
 <body>
-<form method="post" action="/companies/new" th:object="${companyCreateForm}">
-    <h1>Создание</h1>
+<form method="post" action="/company/create" th:object="${companyCreateForm}">
+    <h1>Create Company</h1>
     <div>
-        <label>Наименование
+        <label>CompanyName
             <input type="text" th:field="*{companyName}" required>
         </label>
     </div>
     <div>
-        <label>Юридическое лицо (ИП, ООО и тд)
+        <label>Legal Entity
             <input type="text" th:field="*{legalEntity}" required>
         </label>
     </div>
     <div>
-        <label>ИНН компании
+        <label>INN
             <input type="text" th:field="*{inn}" required>
         </label>
     </div>
     <div>
-        <label>Расчетный счет
+        <label>BankAccount
             <input type="text" th:field="*{bankAccount}" required>
         </label>
     </div>
     <div>
-        <label>БИК банка
+        <label>Bank Bik
             <input type="text" th:field="*{bankBik}" required>
         </label>
     </div>
     <div>
-        <label>Юридические адрес
+        <label>Legal Address
             <input type="text" th:field="*{legalAddress}">
         </label>
     </div>
     <div>
-        <label>Фактический адрес
+        <label>Actual Address
             <input type="text" th:field="*{actualAddress}">
         </label>
     </div>
     <div>
-        <label>Почта компании
+        <label>Email
             <input type="email" th:field="*{email}">
         </label>
     </div>
     <div>
-        <label>Телефон компании
+        <label>Phone Number
             <input type="tel" th:field="*{phoneNumber}">
         </label>
     </div>
     <div>
-        <label>ОГРН компании
+        <label>OGRN
             <input type="text" th:field="*{ogrn}">
         </label>
     </div>
     <div>
-        <label>ОКПО компании
+        <label>OKPO
             <input type="text" th:field="*{okpo}">
         </label>
     </div>
     <div>
-        <label>ОГРНИП
+        <label>OGRNIP
             <input type="text" th:field="*{ogrnip}">
         </label>
     </div>
     <div>
-        <label>Наименование компании
+        <label>Bank Name
             <input type="text" th:field="*{bankName}" required>
         </label>
     </div>
     <div>
-        <label>КПП Банка
+        <label>Bank Kpp
             <input type="text" th:field="*{bankKpp}">
         </label>
     </div>
     <div>
-        <label>ИНН банка
+        <label>Bank Inn
             <input type="text" th:field="*{bankInn}">
         </label>
     </div>
     <div>
-        <label>Имя директора
+        <label>Director Name
             <input type="text" th:field="*{directorName}">
         </label>
     </div>
     <div>
-        <label>Фамилия директора
+        <label>Director Surname
             <input type="text" th:field="*{directorSurname}">
         </label>
     </div>
     <div>
-        <label>Отчество директора
+        <label>Director Patronymic
             <input type="text" th:field="*{directorPatronymic}">
         </label>
     </div>
     <div>
-        <label>Корреспондентский счет
+        <label>Correspondent Account
             <input type="text" th:field="*{correspondentAccount}">
         </label>
     </div>
     <div>
-        <label>КПП компании
+        <label>Kpp
             <input type="text" th:field="*{kpp}">
         </label>
     </div>

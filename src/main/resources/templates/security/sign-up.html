@@ -2,32 +2,32 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Регистрация - StockTracker</title>
+    <title>Tracker</title>
 </head>
 <body>
-<form method="post" action="/registration" th:object="${signUpForm}">
+<form method="post" th:action="@{/sign-up}" th:object="${signUpForm}">
     <div>
-        <label for="username">Имя пользователя</label>
+        <label for="username">Username</label>
         <input id="username" type="text" th:field="*{username}"/>
     </div>
 
     <div>
-        <label for="email">Почта</label>
+        <label for="email">Email</label>
         <input id="email" type="email" th:field="*{email}"/>
     </div>
 
     <div>
-        <label for="password">Пароль</label>
+        <label for="password">Password</label>
         <input id="password" type="password" th:field="*{password}"/>
     </div>
 
     <div>
         <input id="csrfToken" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
-        <button type="submit">Войти</button>
+        <button type="submit">sign-up</button>
     </div>
 </form>
 <div>
-    <p>Есть аккаунт? <a href="/sign-in">Войдите</a></p>
+    <p>Already have an account? <a href="/sign-in">Sign in</a></p>
 </div>
 </body>
 </html>

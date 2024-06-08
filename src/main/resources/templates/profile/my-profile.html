@@ -2,17 +2,17 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Мой Профиль - StockTracker</title>
+    <title>Tracker</title>
 </head>
 <body>
-<h1>Профиль</h1>
-<h3>Никнейм</h3>
-<p th:text="'@' + ${authenticatedCustomer.getUsername()}"></p>
-<h3>Почта</h3>
-<p th:text="${authenticatedCustomer.getEmail()}"></p>
+<h1>Profile</h1>
+<h3>Username:</h3>
+<p th:text="'@' + ${authenticationCustomer.getUsername()}"></p>
+<h3>Email address</h3>
+<p th:text="${authenticationCustomer.getEmail()}"></p>
 
 <div>
-    <a th:href="@{/settings/account}">Настройка</a>
+    <a th:href="@{/settings/account}">Settings</a>
 </div>
 <form th:method="post" th:action="@{/logout}">
     <input id="csrfToken" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
