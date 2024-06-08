@@ -101,7 +101,7 @@ public class SettingsController {
         Customer authenticationCustomer = profileService.changeAccountInfo(form);
         customerService.saveCustomerAndUpdateSession(authenticationCustomer);
 
-        return RedirectUtil.redirect("/settings/account");
+        return RedirectUtil.redirect("/");
     }
 
     @PostMapping("/password")

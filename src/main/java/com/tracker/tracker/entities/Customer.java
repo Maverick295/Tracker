@@ -1,13 +1,17 @@
 package com.tracker.tracker.entities;
 
-import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.Collection;
+import java.util.Collections;
 
 @Entity
 @Table(name = "customers")
-public class Customer {
+public class Customer implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long customerId;
@@ -21,6 +25,8 @@ public class Customer {
     private boolean active;
     private String role;
     private LocalDateTime dateOfCreate;
+
+    // Getters and setters
 
     public void setCustomerId(Long customerId) {
         this.customerId = customerId;
@@ -118,5 +124,31 @@ public class Customer {
     public Customer setDateOfCreate(LocalDateTime dateOfCreate) {
         this.dateOfCreate = dateOfCreate;
         return this;
+    }
+
+   // Это должно быть в отдельном классе CustomerDetails
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority(role));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return active;
     }
 }

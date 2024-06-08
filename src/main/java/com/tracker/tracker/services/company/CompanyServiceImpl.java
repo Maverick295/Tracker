@@ -99,8 +99,8 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public void deleteCompany(Long id) {
-        companyRepository.deleteById(id);
+    public void deleteCompanyById(Long id) {
+
     }
 
     @Override
