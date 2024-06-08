@@ -3,6 +3,7 @@ package com.tracker.tracker.controllers.company;
 import com.tracker.tracker.entities.Company;
 import com.tracker.tracker.entities.Customer;
 import com.tracker.tracker.forms.company.CompanyForm;
+import com.tracker.tracker.models.company.CompanyModel;
 import com.tracker.tracker.services.company.CompanyService;
 import com.tracker.tracker.services.customer.CustomerService;
 import com.tracker.tracker.services.models.ModelService;
@@ -10,6 +11,7 @@ import com.tracker.tracker.utils.RedirectUtil;
 import com.tracker.tracker.validators.company.CompanyFormValidator;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -17,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-@RequestMapping("/company")
+@RequestMapping("/companies")
 public class CompanyRestController {
     private final CompanyService companyService;
     private final ModelService modelService;
@@ -42,37 +44,21 @@ public class CompanyRestController {
         binder.addValidators(companyFormValidator);
     }
 
-    @PostMapping("/create")
-    public ModelAndView createCompanyAction(
+    @PostMapping("/new")
+    public CompanyModel createCompanyAction(
             @ModelAttribute @Valid CompanyForm form,
             BindingResult result
     ) {
         if (result.hasErrors()) {
-            return new ModelAndView("/company/company-create")
-                    .addObject("companyCreateForm", new CompanyForm());
+            throw new ValidationException();
         }
-        Company company = companyService.createCompany(form);
-        companyService.save(company);
+        Company createdCompany = companyService.createCompany(form);
+        companyService.save(createdCompany);
 
-        return RedirectUtil.redirect("/company/view");
+        return modelService.getCompanyModel(createdCompany);
     }
 
-    @DeleteMapping("/delete/{uuid}")
-    public ModelAndView deleteCompany(
-            @PathVariable String uuid
-    ) {
-        Company company = companyService.findByUuid(uuid).orElseThrow(EntityNotFoundException::new);
-        Customer currentCustomer = customerService.getAuthenticatedCustomer();
-
-        if (company.getCustomer().equals(currentCustomer)) {
-            companyService.deleteCompanyByUuid(uuid);
-            return RedirectUtil.redirect("/company/view");
-        }
-
-        return RedirectUtil.redirect("/view");
-    }
-
-    @PostMapping("/edit/{uuid}")
+    @PostMapping("/{uuid}/edit")
     public ModelAndView updateCompanyAction(
             @PathVariable String uuid,
             @ModelAttribute @Valid CompanyForm form,
@@ -90,9 +76,24 @@ public class CompanyRestController {
             company = companyService.editCompany(form, uuid);
             companyService.save(company);
 
-            return RedirectUtil.redirect("/company/{uuid}");
+            return RedirectUtil.redirect("/companies/{uuid}");
         }
 
-        return RedirectUtil.redirect("/view");
+        return RedirectUtil.redirect("/companies");
+    }
+
+    @DeleteMapping("/{uuid}")
+    public ModelAndView deleteCompany(
+            @PathVariable String uuid
+    ) {
+        Company company = companyService.findByUuid(uuid).orElseThrow(EntityNotFoundException::new);
+        Customer currentCustomer = customerService.getAuthenticatedCustomer();
+
+        if (company.getCustomer().equals(currentCustomer)) {
+            companyService.deleteCompanyByUuid(uuid);
+            return RedirectUtil.redirect("/companies");
+        }
+
+        return RedirectUtil.redirect("/companies");
     }
 }

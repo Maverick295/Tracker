@@ -5,7 +5,7 @@
     <title>Входные данные - StockTracker</title>
 </head>
 <body>
-<form th:method="post" th:action="@{/settings/account}" th:object="${accountInfoChangeForm}">
+<form th:method="put" th:action="@{/settings/account}" th:object="${accountInfoChangeForm}">
     <h2>Account</h2>
     <div>
         <label>Username
@@ -18,7 +18,7 @@
         </label>
     </div>
     <div>
-        <input id="csrfToken1" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+        <input id="csrfToken" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
         <button type="submit">Save</button>
     </div>
 </form>

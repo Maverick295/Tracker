@@ -35,12 +35,6 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public Optional<Company> findById(Long id) {
-        return companyRepository.findById(id);
-    }
-
-
-    @Override
     public Optional<Company> findByUuid(String uuid) {
         return companyRepository.findCompanyByUuid(uuid);
     }
@@ -51,19 +45,8 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public void deleteCompanyById(Long id) {
-        companyRepository.deleteById(id);
-    }
-
-    @Override
     public Company getCompanyByUuid(String uuid) {
         return findByUuid(uuid)
-                .orElseThrow(() -> new EntityNotFoundException("Компания не найдена"));
-    }
-
-    @Override
-    public Company getCompanyById(Long id) {
-        return findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Компания не найдена"));
     }
 

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-@RequestMapping("/profile")
 public class ProfileController {
     private final CustomerService customerService;
     private final ModelService modelService;
@@ -30,7 +29,7 @@ public class ProfileController {
         this.modelService = modelService;
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/profile/{username}")
     public ModelAndView profile(
             @PathVariable String username,
             Authentication authentication
@@ -41,7 +40,7 @@ public class ProfileController {
         Customer otherCustomer = customerService.getCustomerByUsername(username);
         ProfileModel otherCustomerModel = modelService.getProfileModel(otherCustomer);
 
-        if (!(authentication.isAuthenticated() && authenticatedCustomer.getName().equals(otherCustomer.getName()))) {
+        if (!(authentication.isAuthenticated() && authenticatedCustomer.getUsername().equals(otherCustomer.getUsername()))) {
             return new ModelAndView("/profile/other-profile")
                     .addObject("otherCustomer", otherCustomerModel);
         }
@@ -50,26 +49,26 @@ public class ProfileController {
                 .addObject("authenticatedCustomer", authenticatedCustomerModel);
     }
 
-    @GetMapping("/account")
+    @GetMapping("/settings/account")
     public ModelAndView accountSetting() {
         Customer authenticationCustomer = customerService.getAuthenticatedCustomer();
 
-        return new ModelAndView("profile/settings/account")
+        return new ModelAndView("/profile/settings/account")
                 .addObject("accountInfoChangeForm", new AccountInfoChangeForm())
                 .addObject("authenticationCustomer", modelService.getProfileModel(authenticationCustomer));
     }
 
-    @GetMapping("/password")
+    @GetMapping("/settings/password")
     public ModelAndView passwordSetting() {
-        return new ModelAndView("profile/settings/password")
+        return new ModelAndView("/profile/settings/password")
                 .addObject("passwordChangeForm", new PasswordChangeForm());
     }
 
-    @GetMapping("/personal")
+    @GetMapping("/settings/personal")
     public ModelAndView personalSetting() {
         Customer authenticationCustomer = customerService.getAuthenticatedCustomer();
 
-        return new ModelAndView("profile/settings/personal")
+        return new ModelAndView("/profile/settings/personal")
                 .addObject("personalInfoChangeForm", new PersonalInfoChangeForm())
                 .addObject("authenticationCustomer", modelService.getProfileModel(authenticationCustomer));
     }

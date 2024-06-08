@@ -33,20 +33,20 @@ public class HomeController {
     }
 
     @GetMapping
-    public ModelAndView homePageBeforeLogin(Authentication authentication) {
+    public ModelAndView index(Authentication authentication) {
         if (Objects.nonNull(authentication) && authentication.isAuthenticated()) {
             return RedirectUtil.redirect("/home");
         }
 
-        return new ModelAndView("home/home-before");
+        return new ModelAndView("/home/index");
     }
 
     @GetMapping("/home")
-    public ModelAndView homePageAfterLogin() {
+    public ModelAndView home() {
         Customer authenticatedCustomer = customerService.getAuthenticatedCustomer();
         authenticationService.setUserAuthentication(authenticatedCustomer.getUsername());
 
-        return new ModelAndView("home/home-after")
+        return new ModelAndView("/home/home")
                 .addObject("authenticatedCustomer", modelService.getMainPageModel(authenticatedCustomer));
     }
 }

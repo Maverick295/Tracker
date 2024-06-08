@@ -65,7 +65,7 @@ public class ProfileRestController {
         binder.addValidators(personalInfoChangeFormValidator);
     }
 
-    @PatchMapping("/account")
+    @PutMapping("/account")
     public ModelAndView accountChangeInfo(
             @ModelAttribute @Valid AccountInfoChangeForm form,
             BindingResult result
@@ -78,11 +78,12 @@ public class ProfileRestController {
                     .addObject("authenticationCustomer", modelService.getProfileModel(authenticationCustomer));
         }
         Customer authenticationCustomer = profileService.changeAccountInfo(form);
+        customerService.save(authenticationCustomer);
 
         return RedirectUtil.redirect("/settings/account");
     }
 
-    @PatchMapping("/password")
+    @PutMapping("/password")
     public ModelAndView passwordChange(
             @ModelAttribute @Valid PasswordChangeForm form,
             BindingResult result
@@ -97,7 +98,7 @@ public class ProfileRestController {
         return RedirectUtil.redirect("/settings/password");
     }
 
-    @PatchMapping("/personal")
+    @PutMapping("/personal")
     public ModelAndView personalChangeInfo(
             @ModelAttribute @Valid PersonalInfoChangeForm form,
             BindingResult result

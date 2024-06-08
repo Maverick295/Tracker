@@ -27,10 +27,10 @@
     <p><strong>Корреспондентский счёт:</strong> <span th:text="${company.correspondentAccount}">Нет данных</span></p>
     <p><strong>Кпп:</strong> <span th:text="${company.kpp}">Нет данных</span></p>
 
-    <form th:action="@{/company/edit/{uuid}(uuid=${company.getUuid()})}" th:method="get">
+    <form th:action="@{/frontend/src/templates/company/edit/{uuid}(uuid=${company.getUuid()})}" th:method="get">
         <button type="submit">Изменить</button>
     </form>
-    <form th:action="@{/company/view}" method="get">
+    <form th:action="@{/frontend/src/templates/company/view}" method="get">
         <button type="submit" >Назад</button>
     </form>
 

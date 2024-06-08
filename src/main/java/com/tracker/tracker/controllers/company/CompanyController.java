@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("/company")
+@RequestMapping("/companies")
 public class CompanyController {
     private final CompanyService companyService;
     private final CustomerService customerService;
@@ -37,7 +37,7 @@ public class CompanyController {
         this.modelService = modelService;
     }
 
-    @GetMapping("/view")
+    @GetMapping
     public ModelAndView getTeams(
             @PageableDefault Pageable pageable
     ) {
@@ -48,26 +48,10 @@ public class CompanyController {
                 .addObject("companyPage", companyPage);
     }
 
-    @GetMapping("/create")
+    @GetMapping("/new")
     public ModelAndView createCompany() {
         return new ModelAndView("/company/company-create")
                 .addObject("companyCreateForm", new CompanyForm());
-    }
-
-    @GetMapping("/edit/{uuid}")
-    public ModelAndView updateCompanyInfo(
-            @PathVariable String uuid
-    ) {
-        Company company = companyService.getCompanyByUuid(uuid);
-        Customer currentCustomer = customerService.getAuthenticatedCustomer();
-
-        if (company.getCustomer().equals(currentCustomer)) {
-            return new ModelAndView("/company/company-edit")
-                    .addObject("company", modelService.getCompanyModel(company))
-                    .addObject("companyForm", new CompanyForm());
-        }
-
-        return RedirectUtil.redirect("/view");
     }
 
     @GetMapping("/{uuid}")
@@ -80,6 +64,22 @@ public class CompanyController {
         if (company.getCustomer().equals(currentCustomer)) {
             return new ModelAndView("/company/company-info")
                     .addObject("company", modelService.getCompanyModel(company));
+        }
+
+        return RedirectUtil.redirect("/view");
+    }
+
+    @GetMapping("/{uuid}/edit")
+    public ModelAndView updateCompanyInfo(
+            @PathVariable String uuid
+    ) {
+        Company company = companyService.getCompanyByUuid(uuid);
+        Customer currentCustomer = customerService.getAuthenticatedCustomer();
+
+        if (company.getCustomer().equals(currentCustomer)) {
+            return new ModelAndView("/company/company-edit")
+                    .addObject("company", modelService.getCompanyModel(company))
+                    .addObject("companyForm", new CompanyForm());
         }
 
         return RedirectUtil.redirect("/view");
