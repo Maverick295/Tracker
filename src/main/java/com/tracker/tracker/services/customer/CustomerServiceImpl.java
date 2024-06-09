@@ -4,6 +4,7 @@ import com.tracker.tracker.entities.Customer;
 import com.tracker.tracker.entities.role.Role;
 import com.tracker.tracker.forms.security.SignUpForm;
 import com.tracker.tracker.repositories.CustomerRepository;
+import com.tracker.tracker.security.CustomerDetails;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,7 +24,6 @@ import java.util.UUID;
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final PasswordEncoder encoder;
-
     private final HttpSession session;
 
     @Autowired
@@ -68,7 +68,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .setPassword(encoder.encode(form.getPassword()))
                 .setDateOfCreate(localDateTime)
                 .setActive(true)
-                .setRole(Role.USER.getAuthority());
+                .setRoles(Role.USER.getAuthority());
     }
 
     @Override
@@ -103,7 +103,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     private void updateAuthentication(Customer customer) {
-        UserDetails userDetails = new User(customer.getUsername(), customer.getPassword(), customer.getAuthorities());
+        CustomerDetails customerDetails = new CustomerDetails(customer);
+        UserDetails userDetails = new User(customerDetails.getUsername(), customerDetails.getPassword(), customerDetails.getAuthorities());
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());

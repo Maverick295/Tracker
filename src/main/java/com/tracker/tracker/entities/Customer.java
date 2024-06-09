@@ -1,17 +1,21 @@
 package com.tracker.tracker.entities;
 
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
+
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
 @Entity
 @Table(name = "customers")
-public class Customer implements UserDetails {
+@Data
+public class Customer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long customerId;
@@ -23,7 +27,10 @@ public class Customer implements UserDetails {
     private String name;
     private String surname;
     private boolean active;
-    private String role;
+    private static final long serialVersionUID = 1L;
+
+    @Column(name = "role")
+    private String roles;
     private LocalDateTime dateOfCreate;
 
     // Getters and setters
@@ -108,12 +115,12 @@ public class Customer implements UserDetails {
         return this;
     }
 
-    public String getRole() {
-        return role;
+    public String getRoles() {
+        return roles;
     }
 
-    public Customer setRole(String role) {
-        this.role = role;
+    public Customer setRoles(String roles) {
+        this.roles = roles;
         return this;
     }
 
@@ -124,31 +131,5 @@ public class Customer implements UserDetails {
     public Customer setDateOfCreate(LocalDateTime dateOfCreate) {
         this.dateOfCreate = dateOfCreate;
         return this;
-    }
-
-   // Это должно быть в отдельном классе CustomerDetails
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(role));
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return active;
     }
 }
