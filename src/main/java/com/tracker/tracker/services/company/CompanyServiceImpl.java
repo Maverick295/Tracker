@@ -1,37 +1,32 @@
 package com.tracker.tracker.services.company;
 
+import com.tracker.tracker.dto.company.CompanyDTO;
 import com.tracker.tracker.entities.Company;
-import com.tracker.tracker.entities.Customer;
-import com.tracker.tracker.forms.company.CompanyForm;
-import com.tracker.tracker.models.company.CompanyModel;
+import com.tracker.tracker.entities.User;
 import com.tracker.tracker.repositories.CompanyRepository;
-import com.tracker.tracker.services.customer.CustomerService;
-import com.tracker.tracker.services.models.ModelService;
+import com.tracker.tracker.services.customer.UserService;
+import com.tracker.tracker.utils.ServiceUtil;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
-    private final CustomerService customerService;
-    private final ModelService modelService;
+    private final UserService userService;
 
     @Autowired
     public CompanyServiceImpl(
-            CompanyRepository companyRepository,
-            CustomerService customerService,
-            ModelService modelService
+        CompanyRepository companyRepository,
+        UserService userService
     ) {
         this.companyRepository = companyRepository;
-        this.customerService = customerService;
-        this.modelService = modelService;
+        this.userService = userService;
     }
 
     @Override
@@ -40,53 +35,21 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public void deleteCompanyByUuid(String uuid) {
+    public List<Company> findAll(User user) {
+        return companyRepository.findAllByUser(user);
+    }
+
+    @Override
+    public Company getByUuid(String uuid) {
+        return findByUuid(uuid)
+            .orElseThrow(() -> new EntityNotFoundException("Компания не найдена"));
+    }
+
+    @Override
+    public void deleteByUuid(String uuid) {
         companyRepository.deleteByUuid(uuid);
     }
 
-    @Override
-    public Company getCompanyByUuid(String uuid) {
-        return findByUuid(uuid)
-                .orElseThrow(() -> new EntityNotFoundException("Компания не найдена"));
-    }
-
-    @Override
-    public Page<CompanyModel> getCompanies(Pageable pageable, Customer customer) {
-        return companyRepository.findAllByCustomer(pageable, customer)
-                .map(modelService::getCompanyModel);
-    }
-
-    @Override
-    public Company createCompany(CompanyForm form) {
-        LocalDateTime localDateTime = LocalDateTime.now();
-        Customer ownerCustomer = customerService.getAuthenticatedCustomer();
-
-        return new Company()
-                .setCompanyName(form.getCompanyName())
-                .setLegalEntity(form.getLegalEntity())
-                .setInn(form.getInn())
-                .setBankAccount(form.getBankAccount())
-                .setBankBik(form.getBankBik())
-                .setLegalAddress(form.getLegalAddress())
-                .setActualAddress(form.getActualAddress())
-                .setEmail(form.getEmail())
-                .setPhoneNumber(form.getPhoneNumber())
-                .setOgrn(form.getOgrn())
-                .setOkpo(form.getOkpo())
-                .setDateOfCreate(localDateTime)
-                .setCustomer(ownerCustomer)
-                .setUuid(generateCompanyUuid())
-                .setKpp(form.getKpp())
-                .setBankInn(form.getBankInn())
-                .setBankKpp(form.getBankKpp())
-                .setBankName(form.getBankName())
-                .setCorrespondentAccount(form.getCorrespondentAccount())
-                .setKpp(form.getKpp())
-                .setDirectorName(form.getDirectorName())
-                .setDirectorSurname(form.getDirectorSurname())
-                .setDirectorPatronymic(form.getDirectorPatronymic())
-                .setOgrnip(form.getOgrnip());
-    }
 
     @Override
     public void save(Company company) {
@@ -94,33 +57,60 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public Company editCompany(CompanyForm form, String uuid) {
-        return getCompanyByUuid(uuid)
-                .setCompanyName(form.getCompanyName())
-                .setLegalEntity(form.getLegalEntity())
-                .setInn(form.getInn())
-                .setBankAccount(form.getBankAccount())
-                .setBankBik(form.getBankBik())
-                .setLegalAddress(form.getLegalAddress())
-                .setActualAddress(form.getActualAddress())
-                .setEmail(form.getEmail())
-                .setPhoneNumber(form.getPhoneNumber())
-                .setOgrn(form.getOgrn())
-                .setOkpo(form.getOkpo())
-                .setKpp(form.getKpp())
-                .setBankInn(form.getBankInn())
-                .setBankKpp(form.getBankKpp())
-                .setBankName(form.getBankName())
-                .setCorrespondentAccount(form.getCorrespondentAccount())
-                .setKpp(form.getKpp())
-                .setDirectorName(form.getDirectorName())
-                .setDirectorSurname(form.getDirectorSurname())
-                .setDirectorPatronymic(form.getDirectorPatronymic())
-                .setOgrnip(form.getOgrnip());
+    public Company create(CompanyDTO dto) {
+        return new Company()
+            .setCompanyName(dto.getCompanyName())
+            .setLegalEntity(dto.getLegalEntity())
+            .setInn(dto.getInn())
+            .setBankAccount(dto.getBankAccount())
+            .setBankBik(dto.getBankBik())
+            .setLegalAddress(dto.getLegalAddress())
+            .setActualAddress(dto.getActualAddress())
+            .setEmail(dto.getEmail())
+            .setPhoneNumber(dto.getPhoneNumber())
+            .setOgrn(dto.getOgrn())
+            .setOkpo(dto.getOkpo())
+            .setDateOfCreate(LocalDate.now())
+            .setUser(userService.getAuthenticatedUser())
+            .setUuid(ServiceUtil.generateUuid())
+            .setKpp(dto.getKpp())
+            .setBankInn(dto.getBankInn())
+            .setBankKpp(dto.getBankKpp())
+            .setBankName(dto.getBankName())
+            .setCorrespondentAccount(dto.getCorrespondentAccount())
+            .setKpp(dto.getKpp())
+            .setDirectorName(dto.getDirectorName())
+            .setDirectorSurname(dto.getDirectorSurname())
+            .setDirectorPatronymic(dto.getDirectorPatronymic())
+            .setOgrnip(dto.getOgrnip());
     }
 
     @Override
-    public String generateCompanyUuid() {
-        return UUID.randomUUID().toString();
+    public Company edit(
+        CompanyDTO dto,
+        String uuid
+    ) {
+        return getByUuid(uuid)
+            .setCompanyName(dto.getCompanyName())
+            .setLegalEntity(dto.getLegalEntity())
+            .setInn(dto.getInn())
+            .setBankAccount(dto.getBankAccount())
+            .setBankBik(dto.getBankBik())
+            .setLegalAddress(dto.getLegalAddress())
+            .setActualAddress(dto.getActualAddress())
+            .setEmail(dto.getEmail())
+            .setPhoneNumber(dto.getPhoneNumber())
+            .setOgrn(dto.getOgrn())
+            .setOkpo(dto.getOkpo())
+            .setKpp(dto.getKpp())
+            .setBankInn(dto.getBankInn())
+            .setBankKpp(dto.getBankKpp())
+            .setBankName(dto.getBankName())
+            .setCorrespondentAccount(dto.getCorrespondentAccount())
+            .setKpp(dto.getKpp())
+            .setDirectorName(dto.getDirectorName())
+            .setDirectorSurname(dto.getDirectorSurname())
+            .setDirectorPatronymic(dto.getDirectorPatronymic())
+            .setOgrnip(dto.getOgrnip());
     }
 }

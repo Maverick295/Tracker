@@ -2,18 +2,20 @@ package com.tracker.tracker.entities;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "companies")
 public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long companyId;
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(nullable = false)
     private String companyName; // Название компании
@@ -41,14 +43,13 @@ public class Company {
 
     @Column(nullable = false)
     private String correspondentAccount;
-
     private String legalAddress; // Юридический адрес компании
     private String actualAddress; // Фактический адрес компании
     private String email; // Электронная почта компании
     private String phoneNumber; // Номер телефона компании
     private String ogrn; // ОГРН компании (если применимо)
     private String okpo; // ОКПО компании (если применимо)
-    private LocalDateTime dateOfCreate; // Дата создания на сайте
+    private LocalDate dateOfCreate; // Дата создания на сайте
     private String directorName;
     private String directorSurname;
     private String directorPatronymic;
@@ -56,20 +57,12 @@ public class Company {
     private String bankInn;
     private String bankKpp;
 
-    public Long getCompanyId() {
-        return companyId;
+    public User getUser() {
+        return user;
     }
 
-    public void setCompanyId(Long companyId) {
-        this.companyId = companyId;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public Company setCustomer(Customer customer) {
-        this.customer = customer;
+    public Company setUser(User user) {
+        this.user = user;
         return this;
     }
 
@@ -115,6 +108,42 @@ public class Company {
 
     public Company setBankBik(String bankBik) {
         this.bankBik = bankBik;
+        return this;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public Company setUuid(String uuid) {
+        this.uuid = uuid;
+        return this;
+    }
+
+    public String getOgrnip() {
+        return ogrnip;
+    }
+
+    public Company setOgrnip(String ogrnip) {
+        this.ogrnip = ogrnip;
+        return this;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public Company setBankName(String bankName) {
+        this.bankName = bankName;
+        return this;
+    }
+
+    public String getCorrespondentAccount() {
+        return correspondentAccount;
+    }
+
+    public Company setCorrespondentAccount(String correspondentAccount) {
+        this.correspondentAccount = correspondentAccount;
         return this;
     }
 
@@ -172,73 +201,17 @@ public class Company {
         return this;
     }
 
-    public LocalDateTime getDateOfCreate() {
+    public LocalDate getDateOfCreate() {
         return dateOfCreate;
     }
 
-    public Company setDateOfCreate(LocalDateTime dateOfCreate) {
+    public Company setDateOfCreate(LocalDate dateOfCreate) {
         this.dateOfCreate = dateOfCreate;
         return this;
     }
 
-    public String getUuid() {
-        return uuid;
-    }
-
-    public Company setUuid(String uuid) {
-        this.uuid = uuid;
-        return this;
-    }
-
-    public String getOgrnip() {
-        return ogrnip;
-    }
-
-    public String getBankName() {
-        return bankName;
-    }
-
-    public String getCorrespondentAccount() {
-        return correspondentAccount;
-    }
-
     public String getDirectorName() {
         return directorName;
-    }
-
-    public String getDirectorSurname() {
-        return directorSurname;
-    }
-
-    public String getDirectorPatronymic() {
-        return directorPatronymic;
-    }
-
-    public String getKpp() {
-        return kpp;
-    }
-
-    public String getBankInn() {
-        return bankInn;
-    }
-
-    public String getBankKpp() {
-        return bankKpp;
-    }
-
-    public Company setOgrnip(String ogrnip) {
-        this.ogrnip = ogrnip;
-        return this;
-    }
-
-    public Company setBankName(String bankName) {
-        this.bankName = bankName;
-        return this;
-    }
-
-    public Company setCorrespondentAccount(String correspondentAccount) {
-        this.correspondentAccount = correspondentAccount;
-        return this;
     }
 
     public Company setDirectorName(String directorName) {
@@ -246,9 +219,17 @@ public class Company {
         return this;
     }
 
+    public String getDirectorSurname() {
+        return directorSurname;
+    }
+
     public Company setDirectorSurname(String directorSurname) {
         this.directorSurname = directorSurname;
         return this;
+    }
+
+    public String getDirectorPatronymic() {
+        return directorPatronymic;
     }
 
     public Company setDirectorPatronymic(String directorPatronymic) {
@@ -256,9 +237,17 @@ public class Company {
         return this;
     }
 
+    public String getKpp() {
+        return kpp;
+    }
+
     public Company setKpp(String kpp) {
         this.kpp = kpp;
         return this;
+    }
+
+    public String getBankInn() {
+        return bankInn;
     }
 
     public Company setBankInn(String bankInn) {
@@ -266,8 +255,70 @@ public class Company {
         return this;
     }
 
+    public String getBankKpp() {
+        return bankKpp;
+    }
+
     public Company setBankKpp(String bankKpp) {
         this.bankKpp = bankKpp;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Company company = (Company) o;
+        return Objects.equals(user, company.user) &&
+            Objects.equals(companyName, company.companyName) &&
+            Objects.equals(legalEntity, company.legalEntity) &&
+            Objects.equals(inn, company.inn) &&
+            Objects.equals(bankAccount, company.bankAccount) &&
+            Objects.equals(bankBik, company.bankBik) &&
+            Objects.equals(uuid, company.uuid) &&
+            Objects.equals(ogrnip, company.ogrnip) &&
+            Objects.equals(bankName, company.bankName) &&
+            Objects.equals(correspondentAccount, company.correspondentAccount) &&
+            Objects.equals(legalAddress, company.legalAddress) &&
+            Objects.equals(actualAddress, company.actualAddress) &&
+            Objects.equals(email, company.email) &&
+            Objects.equals(phoneNumber, company.phoneNumber) &&
+            Objects.equals(ogrn, company.ogrn) &&
+            Objects.equals(okpo, company.okpo) &&
+            Objects.equals(dateOfCreate, company.dateOfCreate) &&
+            Objects.equals(directorName, company.directorName) &&
+            Objects.equals(directorSurname, company.directorSurname) &&
+            Objects.equals(directorPatronymic, company.directorPatronymic) &&
+            Objects.equals(kpp, company.kpp) && Objects.equals(bankInn, company.bankInn) &&
+            Objects.equals(bankKpp, company.bankKpp);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+            user,
+            companyName,
+            legalEntity,
+            inn,
+            bankAccount,
+            bankBik,
+            uuid,
+            ogrnip,
+            bankName,
+            correspondentAccount,
+            legalAddress,
+            actualAddress,
+            email,
+            phoneNumber,
+            ogrn,
+            okpo,
+            dateOfCreate,
+            directorName,
+            directorSurname,
+            directorPatronymic,
+            kpp,
+            bankInn,
+            bankKpp
+        );
     }
 }

@@ -1,6 +1,6 @@
 package com.tracker.tracker.details;
 
-import com.tracker.tracker.entities.Customer;
+import com.tracker.tracker.entities.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -13,19 +13,27 @@ public class CustomUserDetails implements UserDetails {
     private List<GrantedAuthority> roles;
     private boolean active;
 
-    public CustomUserDetails(String username, String password, List<GrantedAuthority> roles, boolean active) {
+    public CustomUserDetails(
+        String username,
+        String password,
+        List<GrantedAuthority> roles,
+        boolean active
+    ) {
         this.username = username;
         this.password = password;
         this.roles = roles;
         this.active = active;
     }
 
-    public static CustomUserDetails build(Customer customer, List<GrantedAuthority> roles) {
+    public static CustomUserDetails build(
+        User user,
+        List<GrantedAuthority> roles
+    ) {
         return new CustomUserDetails(
-                customer.getUsername(),
-                customer.getPassword(),
-                roles,
-                customer.isActive()
+            user.getUsername(),
+            user.getPassword(),
+            roles,
+            user.isActive()
         );
     }
 

@@ -1,64 +1,31 @@
 package com.tracker.tracker.controllers.auth;
 
-import com.tracker.tracker.entities.Customer;
-import com.tracker.tracker.forms.security.SignUpForm;
-import com.tracker.tracker.services.customer.CustomerService;
-import com.tracker.tracker.utils.RedirectUtil;
-import com.tracker.tracker.validators.security.SignUpFormValidator;
-import jakarta.validation.Valid;
+import com.tracker.tracker.dto.user.RegistrationDTO;
+import com.tracker.tracker.entities.User;
+import com.tracker.tracker.services.customer.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Objects;
-
-@Controller
+@RestController
 @RequestMapping("/registration")
 public class RegistrationController {
-    private final SignUpFormValidator signUpFormValidator;
-    private final CustomerService customerService;
+    private final UserService userService;
 
     @Autowired
-    public RegistrationController(
-            SignUpFormValidator signUpFormValidator,
-            CustomerService customerService
-    ) {
-        this.signUpFormValidator = signUpFormValidator;
-        this.customerService = customerService;
-    }
-
-    @InitBinder("signUpForm")
-    public void setSignUpForm(WebDataBinder binder) {
-        binder.addValidators(signUpFormValidator);
-    }
-
-    @GetMapping
-    public ModelAndView registrationGet(Authentication authentication) {
-        if (Objects.nonNull(authentication) && authentication.isAuthenticated()) {
-            return RedirectUtil.redirect("/home");
-        }
-
-        return new ModelAndView("/security/registration")
-                .addObject("signUpForm", new SignUpForm());
+    public RegistrationController(UserService userService) {
+        this.userService = userService;
     }
 
     @PostMapping
-    public ModelAndView registrationPost(
-            @ModelAttribute @Valid SignUpForm form,
-            BindingResult result
-    ) {
-        if (result.hasErrors()) {
-            return new ModelAndView("/security/registration")
-                    .addObject("signUpForm", new SignUpForm())
-                    .addObject("username", "");
-        }
-        Customer customer = customerService.createCustomer(form);
-        customerService.save(customer);
+    public ResponseEntity<HttpStatus> registrationPost(@RequestBody RegistrationDTO dto) {
+        User user = userService.create(dto);
+        userService.save(user);
 
-        return RedirectUtil.redirect("/login");
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

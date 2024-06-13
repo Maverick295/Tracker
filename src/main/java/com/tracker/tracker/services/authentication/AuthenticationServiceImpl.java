@@ -1,6 +1,6 @@
 package com.tracker.tracker.services.authentication;
 
-import com.tracker.tracker.services.customer.CustomerService;
+import com.tracker.tracker.services.customer.UserService;
 import com.tracker.tracker.details.CustomUserDetailsService;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,26 +13,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final CustomUserDetailsService customUserDetailsService;
-    private final CustomerService customerService;
 
     @Autowired
-    public AuthenticationServiceImpl(
-            CustomUserDetailsService customUserDetailsService,
-            CustomerService customerService
-    ) {
+    public AuthenticationServiceImpl(CustomUserDetailsService customUserDetailsService) {
         this.customUserDetailsService = customUserDetailsService;
-        this.customerService = customerService;
     }
 
     @Override
     public void setUserAuthentication(@NotNull String username) {
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
         setAuthentication(
-                new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                )
+            new UsernamePasswordAuthenticationToken(
+                userDetails,
+                null,
+                userDetails.getAuthorities()
+            )
         );
     }
 
