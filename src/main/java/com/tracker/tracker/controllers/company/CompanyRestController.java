@@ -1,99 +1,89 @@
 package com.tracker.tracker.controllers.company;
 
+import com.tracker.tracker.dto.company.CompanyDTO;
 import com.tracker.tracker.entities.Company;
-import com.tracker.tracker.entities.Customer;
-import com.tracker.tracker.forms.company.CompanyForm;
-import com.tracker.tracker.models.company.CompanyModel;
+import com.tracker.tracker.entities.User;
+import com.tracker.tracker.mappers.Mapper;
 import com.tracker.tracker.services.company.CompanyService;
-import com.tracker.tracker.services.customer.CustomerService;
-import com.tracker.tracker.services.models.ModelService;
-import com.tracker.tracker.utils.RedirectUtil;
-import com.tracker.tracker.validators.company.CompanyFormValidator;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
-import jakarta.validation.ValidationException;
+import com.tracker.tracker.services.customer.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/companies")
 public class CompanyRestController {
     private final CompanyService companyService;
-    private final ModelService modelService;
-    private final CustomerService customerService;
-    private final CompanyFormValidator companyFormValidator;
+    private final UserService userService;
+    private final Mapper<CompanyDTO, Company> companyMapper;
 
     @Autowired
     public CompanyRestController(
-            CompanyService companyService,
-            ModelService modelService,
-            CustomerService customerService,
-            CompanyFormValidator companyFormValidator
+        CompanyService companyService,
+        UserService userService,
+        Mapper<CompanyDTO, Company> companyMapper
     ) {
         this.companyService = companyService;
-        this.modelService = modelService;
-        this.customerService = customerService;
-        this.companyFormValidator = companyFormValidator;
+        this.userService = userService;
+        this.companyMapper = companyMapper;
     }
 
-    @InitBinder("companyForm")
-    public void setCompanyForm(WebDataBinder binder) {
-        binder.addValidators(companyFormValidator);
+    @GetMapping
+    public List<CompanyDTO> companiesList() {
+        User user = userService.getAuthenticatedUser();
+        List<Company> companies = companyService.findAll(user);
+
+        return companies.stream()
+            .map(companyMapper::mapFrom)
+            .collect(Collectors.toList());
+    }
+
+
+    @GetMapping("/{uuid}")
+    public CompanyDTO moreAboutCompany(@PathVariable String uuid) {
+        Company company = companyService.getByUuid(uuid);
+
+        return companyMapper.mapFrom(company);
+    }
+
+    @GetMapping("/{uuid}/edit")
+    public CompanyDTO editCompany(@PathVariable String uuid) {
+        if (!companyService.getByUuid(uuid).getUser().equals(userService.getAuthenticatedUser())) {
+            throw new AccessDeniedException("You do not have permission to edit this company");
+        }
+        Company company = companyService.getByUuid(uuid);
+
+        return companyMapper.mapFrom(company);
     }
 
     @PostMapping("/new")
-    public CompanyModel createCompanyAction(
-            @ModelAttribute @Valid CompanyForm form,
-            BindingResult result
-    ) {
-        if (result.hasErrors()) {
-            throw new ValidationException();
-        }
-        Company createdCompany = companyService.createCompany(form);
-        companyService.save(createdCompany);
+    public ResponseEntity<HttpStatus> createCompany(@RequestBody CompanyDTO dto) {
+        Company company = companyService.create(dto);
+        companyService.save(company);
 
-        return modelService.getCompanyModel(createdCompany);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/{uuid}/edit")
-    public ModelAndView updateCompanyAction(
-            @PathVariable String uuid,
-            @ModelAttribute @Valid CompanyForm form,
-            BindingResult result
+    public ResponseEntity<HttpStatus> editCompanyPost(
+        @PathVariable String uuid,
+        @RequestBody CompanyDTO dto
     ) {
-        Company company = companyService.findByUuid(uuid).orElseThrow(EntityNotFoundException::new);
-        Customer currentCustomer = customerService.getAuthenticatedCustomer();
+        Company company = companyService.edit(dto, uuid);
+        companyService.save(company);
 
-        if (company.getCustomer().equals(currentCustomer)) {
-            if (result.hasErrors()) {
-                return new ModelAndView("/company/company-edit")
-                        .addObject("company", modelService.getCompanyModel(company))
-                        .addObject("companyForm", new CompanyForm());
-            }
-            company = companyService.editCompany(form, uuid);
-            companyService.save(company);
-
-            return RedirectUtil.redirect("/companies/{uuid}");
-        }
-
-        return RedirectUtil.redirect("/companies");
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{uuid}")
-    public ModelAndView deleteCompany(
-            @PathVariable String uuid
-    ) {
-        Company company = companyService.findByUuid(uuid).orElseThrow(EntityNotFoundException::new);
-        Customer currentCustomer = customerService.getAuthenticatedCustomer();
+    @DeleteMapping("/{uuid}/delete")
+    public ResponseEntity<HttpStatus> deleteCompany(@PathVariable String uuid) {
+        companyService.deleteByUuid(uuid);
 
-        if (company.getCustomer().equals(currentCustomer)) {
-            companyService.deleteCompanyByUuid(uuid);
-            return RedirectUtil.redirect("/companies");
-        }
-
-        return RedirectUtil.redirect("/companies");
+        return ResponseEntity.noContent().build();
     }
 }

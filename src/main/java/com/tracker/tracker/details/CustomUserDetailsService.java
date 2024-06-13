@@ -1,8 +1,8 @@
 package com.tracker.tracker.details;
 
-import com.tracker.tracker.entities.Customer;
+import com.tracker.tracker.entities.User;
 import com.tracker.tracker.entities.role.Role;
-import com.tracker.tracker.services.customer.CustomerService;
+import com.tracker.tracker.services.customer.UserService;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,30 +18,30 @@ import java.util.List;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    private final CustomerService customerService;
+    private final UserService userService;
 
     @Autowired
-    public CustomUserDetailsService(CustomerService customerService) {
-        this.customerService = customerService;
+    public CustomUserDetailsService(UserService userService) {
+        this.userService = userService;
     }
 
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(@NotNull String username) throws UsernameNotFoundException {
-        Customer customer = customerService.getCustomerByUsername(username);
+        User user = userService.getByUsername(username);
 
-        List<GrantedAuthority> role = getGrantedAuthorities(customer);
+        List<GrantedAuthority> role = getGrantedAuthorities(user);
 
         return CustomUserDetails.build(
-                customer,
-                role
+            user,
+            role
         );
     }
 
-    private List<GrantedAuthority> getGrantedAuthorities(@NotNull Customer customer) {
+    private List<GrantedAuthority> getGrantedAuthorities(@NotNull User user) {
         List<GrantedAuthority> role = new ArrayList<>();
         role.add(
-                new SimpleGrantedAuthority(customer.isActive() ? customer.getRole() : Role.BANNED.getAuthority())
+            new SimpleGrantedAuthority(user.isActive() ? user.getRole() : Role.BANNED.getAuthority())
         );
 
         return role;
