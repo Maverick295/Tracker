@@ -15,7 +15,7 @@ import java.util.Collections;
 @Entity
 @Table(name = "customers")
 @Data
-public class Customer implements Serializable {
+public class Customer{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long customerId;
@@ -27,7 +27,6 @@ public class Customer implements Serializable {
     private String name;
     private String surname;
     private boolean active;
-    private static final long serialVersionUID = 1L;
 
     @Column(name = "role")
     private String roles;

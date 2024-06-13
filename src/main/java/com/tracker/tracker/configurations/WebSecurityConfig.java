@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -29,7 +30,8 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityConfig(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/sign-in", "/sign-up")
+                .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())) // чтобы передавать токен в куки
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/sign-in", "/sign-up", "/api/csrf-token")
                         .permitAll()
                         .anyRequest().authenticated()
                 )
