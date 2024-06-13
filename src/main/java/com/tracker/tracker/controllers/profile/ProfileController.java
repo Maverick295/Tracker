@@ -4,6 +4,7 @@ import com.tracker.tracker.dto.user.UserDTO;
 import com.tracker.tracker.entities.User;
 import com.tracker.tracker.mappers.Mapper;
 import com.tracker.tracker.services.customer.UserService;
+import com.tracker.tracker.utils.errors.user.UserAccessViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +31,7 @@ public class ProfileController {
         User urlUser = userService.getByUsername(username);
 
         if (!urlUser.equals(authenticatedUser)) {
-            throw new AccessDeniedException("You do not have permission to access this resource");
+            throw new UserAccessViolationException("You do not have permission to access this resource");
         }
 
         return userMapper.mapFrom(urlUser);

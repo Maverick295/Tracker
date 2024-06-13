@@ -1,6 +1,10 @@
 package com.tracker.tracker.entities;
 
+
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,42 +13,54 @@ import java.util.Objects;
 @Entity
 @Table(name = "companies")
 public class Company {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @NotEmpty(message = "user id can't be empty")
     private User user;
 
     @Column(nullable = false)
+    @NotEmpty(message = "company name can't be empty")
     private String companyName; // Название компании
 
     @Column(nullable = false)
+    @NotEmpty(message = "legal entity can't be empty")
     private String legalEntity; // Юридическое лицо: ИП, ООО и т.д.
 
     @Column(nullable = false, unique = true)
+    @NotEmpty(message = "inn can't be empty")
     private String inn; // ИНН компании, уникальный
 
     @Column(nullable = false)
+    @NotEmpty(message = "bank account can't be empty")
     private String bankAccount; // Расчетный счет компании
 
     @Column(nullable = false)
+    @NotEmpty(message = "bankBik can't be empty")
     private String bankBik; // БИК банка, в котором открыт расчетный счет
 
     @Column(unique = true)
     private String uuid;
 
     @Column(nullable = false)
+    @NotEmpty(message = "ogrnip can't be empty")
     private String ogrnip;
 
     @Column(nullable = false)
+    @NotEmpty(message = "bankName can't be empty")
     private String bankName;
 
     @Column(nullable = false)
+    @NotEmpty(message = "correspondentAccount can't be empty")
     private String correspondentAccount;
     private String legalAddress; // Юридический адрес компании
     private String actualAddress; // Фактический адрес компании
+
+    @Email
     private String email; // Электронная почта компании
     private String phoneNumber; // Номер телефона компании
     private String ogrn; // ОГРН компании (если применимо)

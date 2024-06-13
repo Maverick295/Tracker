@@ -1,8 +1,22 @@
 package com.tracker.tracker.dto.user;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
+
 public class RegistrationDTO {
+
+    @NotEmpty(message = "username can't be empty")
+    @Size(min = 2, max = 50, message = "username should be between 2 and 50 symbols")
     private String username;
+
+    @NotEmpty(message = "email can't be empty")
+    @Email
     private String email;
+
+    @NotEmpty(message = "password can't be empty")
+    @Size(min = 8, message = "Password should be greater than 8 symbols")
     private String password;
 
     public String getUsername() {
