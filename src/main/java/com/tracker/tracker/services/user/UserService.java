@@ -1,4 +1,4 @@
-package com.tracker.tracker.services.customer;
+package com.tracker.tracker.services.user;
 
 import com.tracker.tracker.entities.User;
 import com.tracker.tracker.dto.user.RegistrationDTO;

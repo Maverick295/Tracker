@@ -2,7 +2,7 @@ package com.tracker.tracker.controllers.auth;
 
 import com.tracker.tracker.dto.user.RegistrationDTO;
 import com.tracker.tracker.entities.User;
-import com.tracker.tracker.services.customer.UserService;
+import com.tracker.tracker.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

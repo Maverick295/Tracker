@@ -1,6 +1,5 @@
 package com.tracker.tracker.services.authentication;
 
-import com.tracker.tracker.services.customer.UserService;
 import com.tracker.tracker.details.CustomUserDetailsService;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
