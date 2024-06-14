@@ -1,4 +1,4 @@
-package com.tracker.tracker.services.customer;
+package com.tracker.tracker.services.user;
 
 import com.tracker.tracker.dto.user.RegistrationDTO;
 import com.tracker.tracker.entities.User;
@@ -43,13 +43,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getByUsername(String username) {
         return findByUsername(username)
-            .orElseThrow(() -> new EntityNotFoundException("Не удалось найти пользователя с таким именем"));
+            .orElseThrow(
+                () -> new EntityNotFoundException("User with username " + username + " not found")
+            );
     }
 
     @Override
     public User getByEmail(String email) {
         return findByEmail(email)
-            .orElseThrow(() -> new EntityNotFoundException("Не удалось найти пользователя с такой почтой"));
+            .orElseThrow(
+                () -> new EntityNotFoundException("User with username " + email + " not found")
+            );
     }
 
     @Override
