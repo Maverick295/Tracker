@@ -41,9 +41,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public Company getByUuid(String uuid) {
         return findByUuid(uuid)
-            .orElseThrow(
-                () -> new EntityNotFoundException("Company with uuid " + uuid + " not found")
-            );
+            .orElseThrow(() -> new EntityNotFoundException("Компания не найдена"));
     }
 
     @Override
