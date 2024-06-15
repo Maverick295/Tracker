@@ -4,15 +4,11 @@ import com.tracker.tracker.dto.company.CompanyDTO;
 import com.tracker.tracker.entities.Company;
 import com.tracker.tracker.entities.User;
 import com.tracker.tracker.repositories.CompanyRepository;
-import com.tracker.tracker.services.customer.UserService;
+import com.tracker.tracker.services.user.UserService;
 import com.tracker.tracker.utils.ServiceUtil;
-import com.tracker.tracker.utils.errors.company.CompanyDBIntegrityConstraints;
-import com.tracker.tracker.utils.errors.company.CompanyNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -45,32 +41,21 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public Company getByUuid(String uuid) {
         return findByUuid(uuid)
-            .orElseThrow(CompanyNotFoundException::new);
+            .orElseThrow(() -> new EntityNotFoundException("Компания не найдена"));
     }
 
     @Override
-    @Transactional
     public void deleteByUuid(String uuid) {
-        try {
-            companyRepository.deleteByUuid(uuid);
-        } catch (EmptyResultDataAccessException e) {
-            throw new CompanyNotFoundException();
-        }
+        companyRepository.deleteByUuid(uuid);
     }
 
 
     @Override
-    @Transactional
     public void save(Company company) {
-        try {
-            companyRepository.save(company);
-        } catch (DataIntegrityViolationException e) {
-            throw new CompanyDBIntegrityConstraints("Failed to save company due to integrity constraints");
-        }
+        companyRepository.save(company);
     }
 
     @Override
-    @Transactional
     public Company create(CompanyDTO dto) {
         return new Company()
             .setCompanyName(dto.getCompanyName())
@@ -100,7 +85,6 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    @Transactional
     public Company edit(
         CompanyDTO dto,
         String uuid

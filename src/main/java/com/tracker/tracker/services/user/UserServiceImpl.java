@@ -1,11 +1,10 @@
-package com.tracker.tracker.services.customer;
+package com.tracker.tracker.services.user;
 
 import com.tracker.tracker.dto.user.RegistrationDTO;
 import com.tracker.tracker.entities.User;
 import com.tracker.tracker.entities.role.Role;
 import com.tracker.tracker.repositories.UserRepository;
 import com.tracker.tracker.utils.ServiceUtil;
-import com.tracker.tracker.utils.errors.user.UserWithUsernameNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,13 +43,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getByUsername(String username) {
         return findByUsername(username)
-            .orElseThrow(UserWithUsernameNotFoundException::new);
+            .orElseThrow(
+                () -> new EntityNotFoundException("User with username " + username + " not found")
+            );
     }
 
     @Override
     public User getByEmail(String email) {
         return findByEmail(email)
-            .orElseThrow(UserWithUsernameNotFoundException::new);
+            .orElseThrow(
+                () -> new EntityNotFoundException("User with username " + email + " not found")
+            );
     }
 
     @Override
@@ -75,7 +78,7 @@ public class UserServiceImpl implements UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         return findByUsername(authentication.getName())
-            .orElseThrow(UserWithUsernameNotFoundException::new);
+            .orElseThrow(() -> new EntityNotFoundException("Авторизованного пользователя с таким именем не существует"));
     }
 }
 

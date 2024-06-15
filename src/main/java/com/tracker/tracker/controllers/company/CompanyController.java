@@ -5,7 +5,7 @@ import com.tracker.tracker.entities.Company;
 import com.tracker.tracker.entities.User;
 import com.tracker.tracker.mappers.Mapper;
 import com.tracker.tracker.services.company.CompanyService;
-import com.tracker.tracker.services.customer.UserService;
+import com.tracker.tracker.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +17,13 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/companies")
-public class CompanyRestController {
+public class CompanyController {
     private final CompanyService companyService;
     private final UserService userService;
     private final Mapper<CompanyDTO, Company> companyMapper;
 
     @Autowired
-    public CompanyRestController(
+    public CompanyController(
         CompanyService companyService,
         UserService userService,
         Mapper<CompanyDTO, Company> companyMapper
@@ -53,10 +53,11 @@ public class CompanyRestController {
 
     @GetMapping("/{uuid}/edit")
     public CompanyDTO editCompany(@PathVariable String uuid) {
-        if (!companyService.getByUuid(uuid).getUser().equals(userService.getAuthenticatedUser())) {
+        Company company = companyService.getByUuid(uuid);
+
+        if (!company.getUser().equals(userService.getAuthenticatedUser())) {
             throw new AccessDeniedException("You do not have permission to edit this company");
         }
-        Company company = companyService.getByUuid(uuid);
 
         return companyMapper.mapFrom(company);
     }
@@ -69,8 +70,8 @@ public class CompanyRestController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("/{uuid}/edit")
-    public ResponseEntity<HttpStatus> editCompanyPost(
+    @PatchMapping("/{uuid}/edit")
+    public ResponseEntity<HttpStatus> editCompanyPatch(
         @PathVariable String uuid,
         @RequestBody CompanyDTO dto
     ) {

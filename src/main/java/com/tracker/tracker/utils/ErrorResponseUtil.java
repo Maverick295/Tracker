@@ -1,10 +1,10 @@
 package com.tracker.tracker.utils;
 
-public class ErrorResponse {
+public class ErrorResponseUtil {
     private String message;
     private long timestamp;
 
-    public ErrorResponse(String message, long timestamp) {
+    public ErrorResponseUtil(String message, long timestamp) {
         this.message = message;
         this.timestamp = timestamp;
     }

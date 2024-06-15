@@ -1,6 +1,6 @@
 package com.tracker.tracker.controllers.handler;
 
-import com.tracker.tracker.utils.ErrorResponse;
+import com.tracker.tracker.utils.ErrorResponseUtil;
 import com.tracker.tracker.utils.errors.company.CompanyDBIntegrityConstraints;
 import com.tracker.tracker.utils.errors.company.CompanyNotFoundException;
 import com.tracker.tracker.utils.errors.user.UserAccessViolationException;
@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionApiHandler {
 
     @ExceptionHandler(CompanyNotFoundException.class)
-    public ResponseEntity<ErrorResponse> notFoundException(CompanyNotFoundException exception) {
-        ErrorResponse response = new ErrorResponse(
+    public ResponseEntity<ErrorResponseUtil> notFoundException(CompanyNotFoundException exception) {
+        ErrorResponseUtil response = new ErrorResponseUtil(
                 "Company with this Uuid not found",
                 System.currentTimeMillis());
 
@@ -25,8 +25,8 @@ public class ExceptionApiHandler {
     }
 
     @ExceptionHandler(CompanyDBIntegrityConstraints.class)
-    public ResponseEntity<ErrorResponse> notFoundException(CompanyDBIntegrityConstraints exception) {
-        ErrorResponse response = new ErrorResponse(
+    public ResponseEntity<ErrorResponseUtil> notFoundException(CompanyDBIntegrityConstraints exception) {
+        ErrorResponseUtil response = new ErrorResponseUtil(
                 exception.getMessage(),
                 System.currentTimeMillis());
 
@@ -34,8 +34,8 @@ public class ExceptionApiHandler {
     }
 
     @ExceptionHandler(UserWithUsernameNotFoundException.class)
-    public ResponseEntity<ErrorResponse> notFoundException(UserWithUsernameNotFoundException exception) {
-        ErrorResponse response = new ErrorResponse(
+    public ResponseEntity<ErrorResponseUtil> notFoundException(UserWithUsernameNotFoundException exception) {
+        ErrorResponseUtil response = new ErrorResponseUtil(
                 "User with this username not found",
                 System.currentTimeMillis());
 
@@ -43,8 +43,8 @@ public class ExceptionApiHandler {
     }
 
     @ExceptionHandler(UserWithEmailNotFoundException.class)
-    public ResponseEntity<ErrorResponse> notFoundException(UserWithEmailNotFoundException exception) {
-        ErrorResponse response = new ErrorResponse(
+    public ResponseEntity<ErrorResponseUtil> notFoundException(UserWithEmailNotFoundException exception) {
+        ErrorResponseUtil response = new ErrorResponseUtil(
                 "User with this email not found",
                 System.currentTimeMillis());
 
@@ -52,8 +52,8 @@ public class ExceptionApiHandler {
     }
 
     @ExceptionHandler(UserNotCreatedException.class)
-    public ResponseEntity<ErrorResponse> notFoundException(UserNotCreatedException exception) {
-        ErrorResponse response = new ErrorResponse(
+    public ResponseEntity<ErrorResponseUtil> notFoundException(UserNotCreatedException exception) {
+        ErrorResponseUtil response = new ErrorResponseUtil(
                 exception.getMessage(),
                 System.currentTimeMillis());
 
@@ -61,8 +61,8 @@ public class ExceptionApiHandler {
     }
 
     @ExceptionHandler(UserAccessViolationException.class)
-    public ResponseEntity<ErrorResponse> notFoundException(UserAccessViolationException exception) {
-        ErrorResponse response = new ErrorResponse(
+    public ResponseEntity<ErrorResponseUtil> notFoundException(UserAccessViolationException exception) {
+        ErrorResponseUtil response = new ErrorResponseUtil(
                 exception.getMessage(),
                 System.currentTimeMillis());
 
