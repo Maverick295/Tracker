@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@Table(name = "companies")
 public class Company {
 
     @Id
@@ -20,7 +19,6 @@ public class Company {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @NotEmpty(message = "user id can't be empty")
     private User user;
 
     @Column(nullable = false)

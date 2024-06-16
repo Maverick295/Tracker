@@ -112,4 +112,10 @@ public class CompanyServiceImpl implements CompanyService {
             .setDirectorPatronymic(dto.getDirectorPatronymic())
             .setOgrnip(dto.getOgrnip());
     }
+
+    @Override
+    public Company findByName(String companyName) {
+        return companyRepository.findCompanyByCompanyName(companyName)
+            .orElseThrow(() -> new EntityNotFoundException("Company with this name not found"));
+    }
 }

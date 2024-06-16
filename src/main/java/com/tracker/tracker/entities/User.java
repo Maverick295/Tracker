@@ -2,10 +2,7 @@ package com.tracker.tracker.entities;
 
 import com.tracker.tracker.patterns.Patterns;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,14 +15,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+
     private String uuid;
 
     @NotEmpty(message = "email can't be empty")
     @Email
     private String email;
-
-    @Pattern(regexp = Patterns.PHONE, message = "The number doesn't match the format")
-    @NotEmpty(message = "number can't be empty")
     private String phone;
 
     @NotEmpty(message = "password can't be empty")
@@ -35,19 +31,13 @@ public class User {
     @NotEmpty(message = "username can't be empty")
     @Size(min = 2, max = 50, message = "username should be between 2 and 50 symbols")
     private String username;
-
-    @NotEmpty(message = "name can't be empty")
-    @Size(min = 2, max = 50, message = "name should be between 2 and 50 symbols")
     private String name;
-
-    @NotEmpty(message = "surname can't be empty")
-    @Size(min = 2, max = 50, message = "surname should be between 2 and 50 symbols")
     private String surname;
 
-    @NotEmpty
+
     private boolean active;
 
-    @NotEmpty(message = "role can't be empty")
+
     private String role;
     private LocalDate dateOfCreate;
 
