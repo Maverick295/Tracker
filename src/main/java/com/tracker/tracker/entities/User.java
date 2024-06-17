@@ -2,10 +2,7 @@ package com.tracker.tracker.entities;
 
 import com.tracker.tracker.patterns.Patterns;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -44,7 +41,7 @@ public class User {
     @Size(min = 2, max = 50, message = "surname should be between 2 and 50 symbols")
     private String surname;
 
-    @NotEmpty
+    @NotNull
     private boolean active;
 
     @NotEmpty(message = "role can't be empty")

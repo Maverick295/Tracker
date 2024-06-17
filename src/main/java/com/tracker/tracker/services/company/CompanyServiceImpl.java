@@ -3,10 +3,10 @@ package com.tracker.tracker.services.company;
 import com.tracker.tracker.dto.company.CompanyDTO;
 import com.tracker.tracker.entities.Company;
 import com.tracker.tracker.entities.User;
+import com.tracker.tracker.errors.EntityNotFoundException;
 import com.tracker.tracker.repositories.CompanyRepository;
 import com.tracker.tracker.services.user.UserService;
 import com.tracker.tracker.utils.ServiceUtil;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
