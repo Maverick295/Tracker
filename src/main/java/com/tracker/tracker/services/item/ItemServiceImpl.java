@@ -9,25 +9,30 @@ import com.tracker.tracker.services.user.UserService;
 import com.tracker.tracker.utils.ServiceUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
 @Service
+@Validated
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserService userService;
     private final CompanyService companyService;
-    private final ModelMapper mapper;
 
     @Autowired
-    public ItemServiceImpl(ItemRepository itemRepository, UserService userService, CompanyService companyService, ModelMapper mapper) {
+    public ItemServiceImpl(
+            ItemRepository itemRepository,
+            UserService userService,
+            CompanyService companyService)
+    {
         this.itemRepository = itemRepository;
         this.userService = userService;
         this.companyService = companyService;
-        this.mapper = mapper;
     }
 
     @Override
@@ -46,7 +51,6 @@ public class ItemServiceImpl implements ItemService {
             .orElseThrow(() -> new EntityNotFoundException("Item not found"));
     }
 
-    // TODO: написать проверки для удаления и остальных методов
     @Override
     @Transactional
     public void deleteByUuid(String uuid) {
@@ -54,12 +58,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void save(Item item) {
+    public void save(@Validated(Item.Create.class) Item item) {
         itemRepository.save(item);
     }
 
     @Override
-    public Item enrichItem(Item item, String companyName) {
+    public Item enrichItem(@Validated(Item.Update.class) Item item, String companyName) {
         User supplier = userService.getAuthenticatedUser();
         Company company = companyService.findByName(companyName);
 

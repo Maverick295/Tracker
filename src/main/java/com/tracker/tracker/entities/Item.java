@@ -8,7 +8,9 @@ import java.math.BigDecimal;
 @Table(name = "items")
 public class Item {
 
-    // TODO: Надо добавить аннтоации для валидидирования, когда будет известно какие поля обязательны
+    // TODO: Надо добавить аннтоации для валидидирования,
+    //  когда будет известно какие поля обязательны
+    //  + добавить в разные группы для валидирования
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Уникальный идентификатор продукта
     private Long id;
@@ -262,5 +264,11 @@ public class Item {
     public Item setPricePerUnit(BigDecimal pricePerUnit) {
         this.pricePerUnit = pricePerUnit;
         return this;
+    }
+
+    public interface Update {
+    }
+
+    public interface Create {
     }
 }

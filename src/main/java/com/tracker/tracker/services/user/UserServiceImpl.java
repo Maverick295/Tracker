@@ -3,9 +3,9 @@ package com.tracker.tracker.services.user;
 import com.tracker.tracker.dto.user.RegistrationDTO;
 import com.tracker.tracker.entities.User;
 import com.tracker.tracker.entities.role.Role;
+import com.tracker.tracker.errors.EntityNotFoundException;
 import com.tracker.tracker.repositories.UserRepository;
 import com.tracker.tracker.utils.ServiceUtil;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -78,7 +78,9 @@ public class UserServiceImpl implements UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         return findByUsername(authentication.getName())
-            .orElseThrow(() -> new EntityNotFoundException("Авторизованного пользователя с таким именем не существует"));
+            .orElseThrow(
+                () -> new EntityNotFoundException("User with username " + authentication.getName() + " not found")
+            );
     }
 }
 
