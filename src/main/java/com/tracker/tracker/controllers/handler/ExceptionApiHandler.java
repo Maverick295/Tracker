@@ -41,7 +41,7 @@ public class ExceptionApiHandler {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponseUtil> notFoundException(AccessDeniedException exception) {
+    public ResponseEntity<ErrorResponseUtil> accessDeniedException(AccessDeniedException exception) {
         ErrorResponseUtil response = new ErrorResponseUtil(
             exception.getMessage(),
             System.currentTimeMillis());
