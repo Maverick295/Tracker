@@ -1,12 +1,10 @@
 package com.tracker.tracker.controllers.handler;
 
+import com.tracker.tracker.errors.DBIntegrityConstraintsException;
+import com.tracker.tracker.errors.EntityNotCreatedException;
+import com.tracker.tracker.errors.AccessDeniedException;
 import com.tracker.tracker.utils.ErrorResponseUtil;
-import com.tracker.tracker.utils.errors.company.CompanyDBIntegrityConstraints;
-import com.tracker.tracker.utils.errors.company.CompanyNotFoundException;
-import com.tracker.tracker.utils.errors.user.UserAccessViolationException;
-import com.tracker.tracker.utils.errors.user.UserNotCreatedException;
-import com.tracker.tracker.utils.errors.user.UserWithEmailNotFoundException;
-import com.tracker.tracker.utils.errors.user.UserWithUsernameNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,56 +13,38 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ExceptionApiHandler {
 
-    @ExceptionHandler(CompanyNotFoundException.class)
-    public ResponseEntity<ErrorResponseUtil> notFoundException(CompanyNotFoundException exception) {
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorResponseUtil> entityNotFoundException(EntityNotFoundException exception) {
         ErrorResponseUtil response = new ErrorResponseUtil(
-                "Company with this Uuid not found",
-                System.currentTimeMillis());
+            exception.getMessage(),
+            System.currentTimeMillis());
 
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(CompanyDBIntegrityConstraints.class)
-    public ResponseEntity<ErrorResponseUtil> notFoundException(CompanyDBIntegrityConstraints exception) {
+    @ExceptionHandler(DBIntegrityConstraintsException.class)
+    public ResponseEntity<ErrorResponseUtil> dbIntegrityException(DBIntegrityConstraintsException exception) {
         ErrorResponseUtil response = new ErrorResponseUtil(
-                exception.getMessage(),
-                System.currentTimeMillis());
+            exception.getMessage(),
+            System.currentTimeMillis());
 
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(UserWithUsernameNotFoundException.class)
-    public ResponseEntity<ErrorResponseUtil> notFoundException(UserWithUsernameNotFoundException exception) {
+    @ExceptionHandler(EntityNotCreatedException.class)
+    public ResponseEntity<ErrorResponseUtil> notCreatedException(EntityNotCreatedException exception) {
         ErrorResponseUtil response = new ErrorResponseUtil(
-                "User with this username not found",
-                System.currentTimeMillis());
-
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(UserWithEmailNotFoundException.class)
-    public ResponseEntity<ErrorResponseUtil> notFoundException(UserWithEmailNotFoundException exception) {
-        ErrorResponseUtil response = new ErrorResponseUtil(
-                "User with this email not found",
-                System.currentTimeMillis());
-
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(UserNotCreatedException.class)
-    public ResponseEntity<ErrorResponseUtil> notFoundException(UserNotCreatedException exception) {
-        ErrorResponseUtil response = new ErrorResponseUtil(
-                exception.getMessage(),
-                System.currentTimeMillis());
+            exception.getMessage(),
+            System.currentTimeMillis());
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(UserAccessViolationException.class)
-    public ResponseEntity<ErrorResponseUtil> notFoundException(UserAccessViolationException exception) {
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponseUtil> accessDeniedException(AccessDeniedException exception) {
         ErrorResponseUtil response = new ErrorResponseUtil(
-                exception.getMessage(),
-                System.currentTimeMillis());
+            exception.getMessage(),
+            System.currentTimeMillis());
 
         return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }

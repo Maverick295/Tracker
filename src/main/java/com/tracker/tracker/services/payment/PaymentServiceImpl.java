@@ -3,9 +3,9 @@ package com.tracker.tracker.services.payment;
 import com.tracker.tracker.dto.payment.PaymentDTO;
 import com.tracker.tracker.entities.Company;
 import com.tracker.tracker.entities.Payment;
+import com.tracker.tracker.errors.EntityNotFoundException;
 import com.tracker.tracker.repositories.PaymentRepository;
 import com.tracker.tracker.utils.ServiceUtil;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

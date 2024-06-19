@@ -3,13 +3,13 @@ package com.tracker.tracker.controllers.payment;
 import com.tracker.tracker.dto.payment.PaymentDTO;
 import com.tracker.tracker.entities.Company;
 import com.tracker.tracker.entities.Payment;
+import com.tracker.tracker.errors.AccessDeniedException;
 import com.tracker.tracker.mappers.Mapper;
 import com.tracker.tracker.services.company.CompanyService;
 import com.tracker.tracker.services.payment.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
