@@ -9,8 +9,6 @@ import com.tracker.tracker.errors.EntityNotUpdatedException;
 import com.tracker.tracker.services.company.CompanyService;
 import com.tracker.tracker.services.item.ItemService;
 import com.tracker.tracker.services.user.UserService;
-import jakarta.validation.Valid;
-import jakarta.validation.groups.Default;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,8 +34,7 @@ public class ItemController {
             ItemService itemService,
             UserService userService,
             CompanyService companyService,
-            ModelMapper modelMapper)
-    {
+            ModelMapper modelMapper) {
         this.itemService = itemService;
         this.userService = userService;
         this.companyService = companyService;
@@ -48,14 +45,13 @@ public class ItemController {
     @GetMapping("/{username}/{companyName}")
     public List<ItemDTO> getAllCompanyItems(
             @PathVariable String companyName,
-            @PathVariable String username)
-    {
+            @PathVariable String username) {
         Company company = companyService.findByName(companyName);
         List<Item> items = itemService.findAllByCompany(company);
 
         return items.stream()
-            .map(item -> modelMapper.map(item, ItemDTO.class))
-            .collect(Collectors.toList());
+                .map(item -> modelMapper.map(item, ItemDTO.class))
+                .collect(Collectors.toList());
     }
 
     @GetMapping
@@ -64,14 +60,14 @@ public class ItemController {
         List<Item> items = itemService.findAllBySupplier(user);
 
         return items.stream()
-            .map(item -> modelMapper.map(item, ItemDTO.class))
-            .collect(Collectors.toList());
+                .map(item -> modelMapper.map(item, ItemDTO.class))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{uuid}")
     public ItemDTO moreAboutItem(@PathVariable String uuid) {
         Item item = itemService.findByUuid(uuid);
-        // TODO: подумать может разрешить другим смотреть чужой товар
+        // подумать может разрешить другим смотреть чужой товар
         if (!item.getSupplier().equals(userService.getAuthenticatedUser())) {
             throw new AccessDeniedException("You do not have permission to see this item");
         }
@@ -82,9 +78,8 @@ public class ItemController {
     @PatchMapping("/{uuid}/edit")
     public ResponseEntity<ItemDTO> editItem(
             @PathVariable String uuid,
-            @RequestBody @Validated({ItemDTO.Update.class, Default.class}) ItemDTO itemDTO,
-            BindingResult bindingResult)
-    {
+            @RequestBody @Validated(ItemDTO.Update.class) ItemDTO itemDTO,
+            BindingResult bindingResult) {
 
         checkErrors(bindingResult);
 
@@ -102,9 +97,8 @@ public class ItemController {
 
     @PostMapping("/new")
     public ResponseEntity<HttpStatus> createItem(
-            @RequestBody @Validated( {Default.class}) ItemDTO dto,
-            BindingResult bindingResult)
-    {
+            @RequestBody @Validated(ItemDTO.Create.class) ItemDTO dto,
+            BindingResult bindingResult) {
         checkErrors(bindingResult);
 
         Item item = modelMapper.map(dto, Item.class);
@@ -122,7 +116,7 @@ public class ItemController {
             for (FieldError fieldError : fieldErrors) {
                 errors.append(fieldError.getField())
                         .append(" : ").append(fieldError.getDefaultMessage())
-                        .append(";");
+                        .append("; ");
             }
 
             throw new EntityNotUpdatedException(errors.toString());

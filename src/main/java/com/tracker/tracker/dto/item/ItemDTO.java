@@ -7,72 +7,90 @@ import java.math.BigDecimal;
 
 public class ItemDTO {
     // TODO: Надо добавить аннтоации для валидидирования, когда будет известно какие поля обязательны
-    @NotBlank(message = "uuid is empty", groups = {Update.class})
+    @NotBlank(message = "uuid is empty", groups = Create.class)
     private String uuid;
     // Наименование продукта
-    @NotBlank(message = "Наименование продукта не может быть пустым")
-    @Size(min = 2, max = 255, message = "name should be between 2 and 255 symbols")
+    @NotBlank(message = "Наименование продукта не может быть пустым", groups = Create.class)
+    @Size(min = 2, max = 255, message = "name should be between 2 and 255 symbols",
+            groups = {Create.class, Update.class})
     private String name;
     // Артикул продукта
-    @NotBlank(message = "Артикул продукта не может быть пустым")
-    @Size(min = 2, max = 100, message = "Артикул продукта не может быть длиннее 100 символов")
+    @NotBlank(message = "Артикул продукта не может быть пустым", groups = Create.class)
+    @Size(min = 2, max = 100, message = "Артикул продукта не может быть длиннее 100 символов",
+            groups = {Create.class, Update.class})
     private String article;
     // Бренд продукта
-    @NotBlank(message = "Наименование бренда не может быть пустым")
-    @Size(min = 2, max = 100, message = "brand should be between 2 and 100 symbols")
+    @NotBlank(message = "Наименование бренда не может быть пустым", groups = Create.class)
+    @Size(min = 2, max = 100, message = "brand should be between 2 and 100 symbols",
+            groups = {Create.class, Update.class})
     private String brand;
     // Штрихкод продукта
     private String barcode;
     // Цвет продукта
-    @NotBlank(message = "Цвет не может быть пустым")
-    @Size(max = 50, message = "color should be between 0 and 50 symbols")
+    @NotBlank(message = "Цвет не может быть пустым", groups = Create.class)
+    @Size(max = 50, message = "color should be between 0 and 50 symbols",
+            groups = {Create.class, Update.class})
     private String color;
     // Размер продукта
-    @NotBlank(message = "Размер не может быть пустым")
-    @Size(min = 1, max = 10, message = "color should be between 1 and 10 symbols")
+    @NotBlank(message = "Размер не может быть пустым", groups = Create.class)
+    @Size(min = 1, max = 10, message = "color should be between 1 and 10 symbols",
+            groups = {Create.class, Update.class})
     private String size;
     // Состав продукта
-    @NotBlank(message = "Соства продукта не может быть пустым")
-    @Size(min = 2, max = 255, message = "composition should be between 2 and 255 symbols")
+    @NotBlank(message = "Соства продукта не может быть пустым", groups = Create.class)
+    @Size(min = 2, max = 255, message = "composition should be between 2 and 255 symbols",
+            groups = {Create.class, Update.class})
     private String composition;
     // Производитель продукта
-    @NotBlank(message = "Компания не может быть пустой", groups = {Update.class})
-    @Size(min = 2, max = 100, message = "company should be between 2 and 100 symbols")
+    @NotBlank(message = "Компания не может быть пустой", groups = Create.class)
+    @Size(min = 2, max = 100, message = "company should be between 2 and 100 symbols",
+            groups = {Create.class, Update.class})
     private String company;
     // Количество продукта на складе
-    @Min(value = 0, message = "Количество товара не может быть отрицательным")
+    @Min(value = 0, message = "Количество товара не может быть отрицательным",
+            groups = {Create.class, Update.class})
     private Integer quantity;
     // Количество этикеток на каждый продукт
-    @Min(value = 0, message = "Количество этикеток не может быть отрицательным")
+    @Min(value = 0, message = "Количество этикеток не может быть отрицательным",
+            groups = {Create.class, Update.class})
     private Integer labelsPerProduct;
     // Дополнительный текст (например, благодарность клиенту)
-    @Size(min = 2, max = 255, message = "composition should be between 2 and 255 symbols")
+    @Size(min = 2, max = 255, message = "composition should be between 2 and 255 symbols",
+            groups = {Create.class, Update.class})
     private String additionalText;
     // Ссылка на фото товара
-    @URL
+    @URL(groups = {Create.class, Update.class})
     private String photoUrl;
     // Тип упаковки
-    @NotBlank(message = "тип упаковки не может быть пустым")
-    @Size(min = 2, max = 100, message = "packagingType should be between 2 and 100 symbols")
+    @NotBlank(message = "тип упаковки не может быть пустым", groups = Create.class)
+    @Size(min = 2, max = 100, message = "packagingType should be between 2 and 100 symbols",
+            groups = {Create.class, Update.class})
     private String packagingType;
     // Нужна ли комплектация, если да, то какая
-    @Size(min = 2, max = 255, message = "assemblyNeeded should be between 2 and 255 symbols")
+    @Size(min = 2, max = 255, message = "assemblyNeeded should be between 2 and 255 symbols",
+            groups = {Create.class, Update.class})
     private String assemblyNeeded;
     // Нужна ли проверка на брак, если да, то что считается браком
-    @Size(min = 2, max = 255, message = "qualityCheckNeeded should be between 2 and 255 symbols")
+    @Size(min = 2, max = 255, message = "qualityCheckNeeded should be between 2 and 255 symbols",
+            groups = {Create.class, Update.class})
     private String qualityCheckNeeded;
     // Информация о замене бирок (указать: наши или вы предоставляете)
-    @NotBlank(message = "Информация о замене бирокне может быть пустой")
-    @Size(min = 2, max = 255, message = "qualityCheckNeeded should be between 2 and 255 symbols")
+    @NotBlank(message = "Информация о замене бирокне может быть пустой", groups = Create.class)
+    @Size(min = 2, max = 255, message = "qualityCheckNeeded should be between 2 and 255 symbols",
+            groups = {Create.class, Update.class})
     private String tagChange;
     // Отрезаем ли бирку пришитую на одежде
-    @NotBlank(message = "Отрезаем ли бирку пришитую на одежде не может быть пустой")
-    @Size(max = 10, message = "qualityCheckNeeded should be between 0 and 10 symbols")
+    @NotBlank(message = "Отрезаем ли бирку пришитую на одежде не может быть пустой", groups = Create.class)
+    @Size(max = 10, message = "qualityCheckNeeded should be between 0 and 10 symbols",
+            groups = {Create.class, Update.class})
     private String cutTag;
 
-    @NotNull(message = "Цена за штуку не может быть пустой")
-    @DecimalMin(value = "0.01", message = "Цена за штуку должна быть больше 0")
-    @Digits(integer = 10, fraction = 2, message = "Цена должна быть валидным денежным значением с не более чем 10 цифрами до и 2 после запятой")
+    @NotNull(message = "Цена за штуку не может быть пустой", groups = Create.class)
+    @DecimalMin(value = "0.01", message = "Цена за штуку должна быть больше 0",
+            groups = {Create.class, Update.class})
+    @Digits(integer = 10, fraction = 2, message = "Цена должна быть валидным денежным значением " +
+            "с не более чем 10 цифрами до и 2 после запятой",
+            groups = {Create.class, Update.class})
     private BigDecimal pricePerUnit;
 
 
@@ -228,6 +246,9 @@ public class ItemDTO {
         this.pricePerUnit = pricePerUnit;
     }
 
-    public interface Create {}
-    public interface Update {}
+    public interface Create {
+    }
+
+    public interface Update {
+    }
 }

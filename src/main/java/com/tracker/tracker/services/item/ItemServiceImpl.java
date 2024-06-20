@@ -9,8 +9,6 @@ import com.tracker.tracker.services.user.UserService;
 import com.tracker.tracker.utils.ServiceUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -28,8 +26,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemServiceImpl(
             ItemRepository itemRepository,
             UserService userService,
-            CompanyService companyService)
-    {
+            CompanyService companyService) {
         this.itemRepository = itemRepository;
         this.userService = userService;
         this.companyService = companyService;
@@ -48,7 +45,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Item findByUuid(String uuid) {
         return itemRepository.findByUuid(uuid)
-            .orElseThrow(() -> new EntityNotFoundException("Item not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Item not found"));
     }
 
     @Override
@@ -68,8 +65,8 @@ public class ItemServiceImpl implements ItemService {
         Company company = companyService.findByName(companyName);
 
         return item
-            .setSupplier(supplier)
-            .setCompany(company)
-            .setUuid(ServiceUtil.generateUuid());
+                .setSupplier(supplier)
+                .setCompany(company)
+                .setUuid(ServiceUtil.generateUuid());
     }
 }
