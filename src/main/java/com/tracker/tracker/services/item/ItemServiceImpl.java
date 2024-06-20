@@ -33,17 +33,17 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> findAllBySupplier(User user) {
+    public List<Item> getAllBySupplier(User user) {
         return itemRepository.findAllBySupplier(user);
     }
 
     @Override
-    public List<Item> findAllByCompany(Company company) {
+    public List<Item> getAllByCompany(Company company) {
         return itemRepository.findByCompany(company);
     }
 
     @Override
-    public Item findByUuid(String uuid) {
+    public Item getByUuid(String uuid) {
         return itemRepository.findByUuid(uuid)
                 .orElseThrow(() -> new EntityNotFoundException("Item not found"));
     }

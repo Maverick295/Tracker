@@ -5,10 +5,12 @@ import com.tracker.tracker.entities.Company;
 import com.tracker.tracker.entities.Item;
 import com.tracker.tracker.entities.User;
 import com.tracker.tracker.errors.AccessDeniedException;
+import com.tracker.tracker.errors.EntityNotCreatedException;
 import com.tracker.tracker.errors.EntityNotUpdatedException;
 import com.tracker.tracker.services.company.CompanyService;
 import com.tracker.tracker.services.item.ItemService;
 import com.tracker.tracker.services.user.UserService;
+import com.tracker.tracker.utils.ValidationUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,13 +43,12 @@ public class ItemController {
         this.modelMapper = modelMapper;
     }
 
-    // TODO: добавить проверки во все методы
     @GetMapping("/{username}/{companyName}")
     public List<ItemDTO> getAllCompanyItems(
             @PathVariable String companyName,
             @PathVariable String username) {
         Company company = companyService.findByName(companyName);
-        List<Item> items = itemService.findAllByCompany(company);
+        List<Item> items = itemService.getAllByCompany(company);
 
         return items.stream()
                 .map(item -> modelMapper.map(item, ItemDTO.class))
@@ -57,7 +58,7 @@ public class ItemController {
     @GetMapping
     public List<ItemDTO> getAllSupplierItems() {
         User user = userService.getAuthenticatedUser();
-        List<Item> items = itemService.findAllBySupplier(user);
+        List<Item> items = itemService.getAllBySupplier(user);
 
         return items.stream()
                 .map(item -> modelMapper.map(item, ItemDTO.class))
@@ -66,7 +67,7 @@ public class ItemController {
 
     @GetMapping("/{uuid}")
     public ItemDTO moreAboutItem(@PathVariable String uuid) {
-        Item item = itemService.findByUuid(uuid);
+        Item item = itemService.getByUuid(uuid);
         // подумать может разрешить другим смотреть чужой товар
         if (!item.getSupplier().equals(userService.getAuthenticatedUser())) {
             throw new AccessDeniedException("You do not have permission to see this item");
@@ -80,10 +81,9 @@ public class ItemController {
             @PathVariable String uuid,
             @RequestBody @Validated(ItemDTO.Update.class) ItemDTO itemDTO,
             BindingResult bindingResult) {
+        ValidationUtils.checkErrors(bindingResult, EntityNotUpdatedException::new);
 
-        checkErrors(bindingResult);
-
-        Item item = itemService.findByUuid(uuid);
+        Item item = itemService.getByUuid(uuid);
 
         if (!item.getSupplier().equals(userService.getAuthenticatedUser())) {
             throw new AccessDeniedException("You do not have permission to edit this item");
@@ -99,7 +99,7 @@ public class ItemController {
     public ResponseEntity<HttpStatus> createItem(
             @RequestBody @Validated(ItemDTO.Create.class) ItemDTO dto,
             BindingResult bindingResult) {
-        checkErrors(bindingResult);
+        ValidationUtils.checkErrors(bindingResult, EntityNotCreatedException::new);
 
         Item item = modelMapper.map(dto, Item.class);
         item = itemService.enrichItem(item, dto.getCompany());
@@ -108,24 +108,9 @@ public class ItemController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    private void checkErrors(BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            StringBuilder errors = new StringBuilder();
-
-            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-            for (FieldError fieldError : fieldErrors) {
-                errors.append(fieldError.getField())
-                        .append(" : ").append(fieldError.getDefaultMessage())
-                        .append("; ");
-            }
-
-            throw new EntityNotUpdatedException(errors.toString());
-        }
-    }
-
     @DeleteMapping("/{uuid}")
     public ResponseEntity<HttpStatus> deleteItem(@PathVariable String uuid) {
-        Item item = itemService.findByUuid(uuid);
+        Item item = itemService.getByUuid(uuid);
 
         if (!item.getSupplier().equals(userService.getAuthenticatedUser())) {
             throw new AccessDeniedException("You do not have permission to delete this item");

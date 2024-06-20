@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface ItemService {
 
-    List<Item> findAllBySupplier(User user);
+    List<Item> getAllBySupplier(User user);
 
-    List<Item> findAllByCompany(Company company);
+    List<Item> getAllByCompany(Company company);
 
-    Item findByUuid(String uuid);
+    Item getByUuid(String uuid);
 
     void deleteByUuid(String uuid);
 
