@@ -34,7 +34,7 @@ public class User {
     private String name;
     private String surname;
 
-
+    @NotNull
     private boolean active;
 
 

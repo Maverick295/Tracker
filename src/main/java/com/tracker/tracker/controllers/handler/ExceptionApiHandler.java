@@ -46,6 +46,7 @@ public class ExceptionApiHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponseUtil> accessDeniedException(AccessDeniedException exception) {
         ErrorResponseUtil response = new ErrorResponseUtil(
@@ -64,6 +65,15 @@ public class ExceptionApiHandler {
         ErrorResponseUtil response = new ErrorResponseUtil(
                 errors,
                 System.currentTimeMillis());
+      
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponseUtil> accessDeniedException(AccessDeniedException exception) {
+        ErrorResponseUtil response = new ErrorResponseUtil(
+            exception.getMessage(),
+            System.currentTimeMillis());
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
