@@ -15,14 +15,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+
     private String uuid;
 
     @NotEmpty(message = "email can't be empty")
     @Email
     private String email;
-
-    @Pattern(regexp = Patterns.PHONE, message = "The number doesn't match the format")
-    @NotEmpty(message = "number can't be empty")
     private String phone;
 
     @NotEmpty(message = "password can't be empty")
@@ -32,19 +31,13 @@ public class User {
     @NotEmpty(message = "username can't be empty")
     @Size(min = 2, max = 50, message = "username should be between 2 and 50 symbols")
     private String username;
-
-    @NotEmpty(message = "name can't be empty")
-    @Size(min = 2, max = 50, message = "name should be between 2 and 50 symbols")
     private String name;
-
-    @NotEmpty(message = "surname can't be empty")
-    @Size(min = 2, max = 50, message = "surname should be between 2 and 50 symbols")
     private String surname;
 
     @NotNull
     private boolean active;
 
-    @NotEmpty(message = "role can't be empty")
+
     private String role;
     private LocalDate dateOfCreate;
 

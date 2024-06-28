@@ -21,4 +21,6 @@ public interface CompanyService {
     Company create(CompanyDTO form);
 
     Company edit(CompanyDTO form, String uuid);
+
+    Company findByName(String companyName);
 }

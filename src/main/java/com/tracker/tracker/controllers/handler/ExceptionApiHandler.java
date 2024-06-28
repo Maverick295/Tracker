@@ -5,10 +5,16 @@ import com.tracker.tracker.errors.EntityNotCreatedException;
 import com.tracker.tracker.errors.AccessDeniedException;
 import com.tracker.tracker.utils.ErrorResponseUtil;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class ExceptionApiHandler {
@@ -40,6 +46,7 @@ public class ExceptionApiHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponseUtil> accessDeniedException(AccessDeniedException exception) {
         ErrorResponseUtil response = new ErrorResponseUtil(
@@ -47,5 +54,27 @@ public class ExceptionApiHandler {
             System.currentTimeMillis());
 
         return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponseUtil> handleConstraintViolationException(ConstraintViolationException exception) {
+        String errors = exception.getConstraintViolations().stream()
+                .map(constraintViolation -> constraintViolation.getPropertyPath() + ": " + constraintViolation.getMessage())
+                .collect(Collectors.joining("; "));
+
+        ErrorResponseUtil response = new ErrorResponseUtil(
+                errors,
+                System.currentTimeMillis());
+      
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponseUtil> accessDeniedException(AccessDeniedException exception) {
+        ErrorResponseUtil response = new ErrorResponseUtil(
+            exception.getMessage(),
+            System.currentTimeMillis());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }
